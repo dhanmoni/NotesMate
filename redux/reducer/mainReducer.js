@@ -313,6 +313,7 @@ export default function(state= initialState, action){
                     images.push(image)
                 } })
                  payload_data = action.payload;
+                
                   myArray = images.filter( function( el ) {
                       const filePath_date = el.path  +'DATE:'+ el.modificationDate
                       
@@ -353,7 +354,7 @@ export default function(state= initialState, action){
 
         const images2 = [];
         state.singleSubject.uncatagorised_note.photos.map(image=> {
-        if(image.length >1){
+        if(image.length >=1){
             return image.map(image=> {
             images2.push(image)
             })
@@ -363,9 +364,11 @@ export default function(state= initialState, action){
             } })
              payload_data = action.payload.data;
             // console.log(payload_data)
-              myArray = images2.filter( function( el ) {
-                return payload_data.indexOf( el.path ) < 0;
-              } );
+            myArray = images2.filter( function( el ) {
+                const filePath_date = el.path  +'DATE:'+ el.modificationDate
+                
+              return payload_data.indexOf( filePath_date ) < 0;
+            } );
              
               
             
@@ -393,7 +396,7 @@ export default function(state= initialState, action){
 
             const images3 = [];
             state.singleChapter.notes.photos.map(image=> {
-            if(image.length >1){
+            if(image.length >=1){
                 return image.map(image=> {
                 images3.push(image)
                 })
@@ -403,9 +406,11 @@ export default function(state= initialState, action){
                 } })
                  payload_data = action.payload.data;
                  //console.log(payload_data)
-                  myArray = images3.filter( function( el ) {
-                    return payload_data.indexOf( el.path ) < 0;
-                  } );
+                 myArray = images3.filter( function( el ) {
+                    const filePath_date = el.path  +'DATE:'+ el.modificationDate
+                    
+                  return payload_data.indexOf( filePath_date ) < 0;
+                } );
                   
                 
                 return{

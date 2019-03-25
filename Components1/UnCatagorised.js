@@ -13,6 +13,7 @@ import {
 import Share, {ShareSheet, Button} from 'react-native-share';
 import Pdf from 'react-native-pdf';
 import ImageView from 'react-native-image-view';
+import RNFetchBlob from 'rn-fetch-blob'
  
 import { BannerView, InterstitialAdManager  } from 'react-native-fbads'
 
@@ -38,7 +39,8 @@ class UnCatagorised extends Component {
           onLongPressOnPhoto:false,
           selectedPhoto:[],
           selectedPhotoUri:[],
-          changeState:0
+          changeState:0,
+          sharePhotoUrl:[]
         }
       
       }
@@ -111,12 +113,16 @@ class UnCatagorised extends Component {
           },
           (error, res) => {
             try {
+              RNFetchBlob.fs.stat(res.uri)
+              .then((stats) => {
+                console.log('res is====================')
+              console.log(stats)
               this.setState({
                 pdf:{
-                  fileUri: res.uri,
-                  fileType: res.type,
-                  fileName: res.fileName,
-                  fileSize: res.fileSize 
+                  fileUri: 'file://'+ stats.path,
+                  fileType: stats.type,
+                  fileName: stats.filename,
+                  fileSize: stats.size 
                 },
                 },()=> {
                   this.props.addPdftoUncatagorised(this.state.pdf)
@@ -136,7 +142,11 @@ class UnCatagorised extends Component {
                   }
                  // console.log('state pdf=', this.state.pdf)
                 });
-              this.setState({fileUri:res.uri})
+                this.setState({fileUri:'file://'+stats.path})
+              })
+              .catch((err) => {console.log(err)})
+              
+             
        
               // console.log('res : ' + JSON.stringify(res));
               // console.log('URI : ' + res.uri);
@@ -197,18 +207,23 @@ class UnCatagorised extends Component {
         // };
        // console.log('item is ', item)
         return (
-          <TouchableOpacity activeOpacity={0.9}  onPress={()=> {this.setState({showPDF:true, pdfUri:{uri: item.fileUri}}) }} style={{marginTop:10, marginHorizontal:10, backgroundColor:'#fff', padding:6, flexDirection:'row',justifyContent:'space-between', alignItems:'center', width:WIDTH-20, borderRadius:8,marginBottom:4, elevation:4}}>
-                     <View style={{alignItems:'center', flexDirection:'row',}}>
+          <TouchableOpacity activeOpacity={0.9}  onPress={()=> {this.setState({showPDF:true, pdfUri:{uri: item.fileUri}}) }} style={{marginTop:10, backgroundColor:'#fff', padding:6, flexDirection:'row',justifyContent:'flex-start', alignItems:'center',width:WIDTH-20, borderRadius:8,marginBottom:4, elevation:4}}>
+                <View style={{justifyContent:'space-between',flexDirection:'row', alignItems:'center',}}>
+
+                  
+                   <View style={{alignItems:'center', flexDirection:'row',padding:0, margin:0, backgroundColor:'#eea3a4', justifyContent:'flex-start', width:80+'%', overflow:'hidden'}}>
                      <Icon name="file-pdf" style={{padding:7}} size={26} color="#ff0000"/>
-                      <View style={{marginLeft:5, marginRight:5}}>
-                      <Text numberOfLines={1} style={{fontFamily:'Quicksand-Medium',padding:7, fontSize:14, color:'#000',}}>{item.fileName}</Text>
+                      <View style={{marginLeft:2,backgroundColor:'#a5a677',justifyContent:'flex-start', width: 90+'%'}}>
+                      <Text numberOfLines={1} style={{fontFamily:'Quicksand-Medium',padding:7, fontSize:14, color:'#000'}}>{item.fileName}</Text>
                       
                       </View>
                      </View>
-                     <View style={{alignItems:'center', justifyContent:'space-around', flexDirection:'row'}}>
+                     <View style={{alignItems:'center', flexDirection:'row',marginRight:5, backgroundColor:'red'}}>
                      <TouchableOpacity
                      activeOpacity={0.9}
                       onPress={()=>{
+                        console.log('file uri==')
+                        console.log(item)
                         this.setState({fileToShare:item.fileUri}, ()=> {
                           Share.open({
                             url: this.state.fileToShare,
@@ -217,7 +232,7 @@ class UnCatagorised extends Component {
                         })
                        
                       }}
-                     style={{backgroundColor:'#fff', elevation:5, borderRadius:100, alignItems:'center', justifyContent:'center', marginRight:5}}>
+                     style={{backgroundColor:'#fff', elevation:5, borderRadius:100, alignItems:'center', justifyContent:'center',marginRight:5}}>
                      <FontAwesome name="share-alt" color="#0073ff" style={{padding:7}} size={22}/>
                      </TouchableOpacity>
                        <TouchableOpacity
@@ -227,97 +242,80 @@ class UnCatagorised extends Component {
 
                        </TouchableOpacity>
                      </View>
-                      
+
+                </View>
+
+                            
 
                       
             </TouchableOpacity>
         )
       }
      
-  //   componentDidMount(){
-  //     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
-  //   }
-
-
-
-    
-  //   handleBackButton() {
-  //     //ToastAndroid.show('Back button is pressed', ToastAndroid.SHORT);
-  //     return true;
-  // }
-      
 
   render() {
 
-    if(this.state.showPDF){
-      console.log(this.state.showPDF)
-      BackHandler.addEventListener('hardwareBackPress', ()=> {
-        //console.log('0000000000000000')
-        this.setState({showPDF: false})
-        //console.log('back')
-        //console.log(this.state.showPDF)
-        return true
-      })  
-    }
-    else if(this.state.showPDF==false){
-      BackHandler.addEventListener('hardwareBackPress', ()=> {
-        //console.log('fffffffffffffffff')
-        //this.setState({showPDF: false})
-        //console.log('back')
-        this.props.navigation.pop()
-        //console.log(this.state.showPDF)
-        return true
-      })
-    }
+    
     
     
   
     const images = [];
     const imageURLs=[];
-    const imagePaths=[]
+  
     this.props.auth.uncatagorised_photos.map(image=> {
-      console.log(image)
-console.log('gagagaggagggagagagaggagga')
+      
+         
        if(image.length >=1){
-        console.log(image)
+      
         return image.map(image=> {
-          console.log('=-oaiuaaauauuau')
-          console.log(image)
-          images.push(image)
-        imageURLs.push({
-           source:{
-             uri:image.path +'DATE:'+ image.modificationDate
-           },
+          if(
+            RNFetchBlob.fs.isDir(image.path)
+          ){
+            console.log('it exists')
+            images.push(image)
+            imageURLs.push({
+               source:{
+                uri:image.path,
+                 key:image.path +'DATE:'+ image.modificationDate
+               },
+               
+             })
            
-         })
-         imagePaths.push({
-          source:{
-            uri:image.path
-          },
+          } else {
+            console.log('it doesnot exists')
+          }
           
-        })
+        
         // console.log('image url: ', imageURLs)
-        })
+        }
+        )
        }
        else {
-        console.log('sasasassasassa')
-        console.log(image)
-         images.push(image)
-         imageURLs.push({
-          source:{
-            uri:image.path +'DATE:'+ image.modificationDate
-          },
-           
-         })
-         imagePaths.push({
-          source:{
-            uri:image.path
-          },
+       if(RNFetchBlob.fs.isDir(image.path)){
+         console.log('it exists here too')
+        images.push(image)
+        imageURLs.push({
+         source:{
+           uri:image.path,
+           key:image.path +'DATE:'+ image.modificationDate
+         },
           
         })
+       
+       
+       }
+       else{
+         console.log('it doesnot exists here too')
+       }
          
        }
-      
+     
+    })
+
+    this.state.selectedPhotoUri.map(item=> {
+      console.log('item+++', item)
+        this.state.sharePhotoUrl.push(item.uri)
+        console.log(this.state.sharePhotoUrl)
     })
 
     
@@ -340,7 +338,7 @@ console.log('gagagaggagggagagagaggagga')
          </LinearGradient> 
          </View>
          {
-                   this.props.auth.uncatagorised_photos.length <= 0 ? (
+                   this.state.selectedPhotoUri.length <= 0 ? (
                      null 
                    ) :(
                     
@@ -360,7 +358,7 @@ console.log('gagagaggagggagagagaggagga')
                       <TouchableOpacity activeOpacity={0.8} 
                       onPress={()=>{  
                          Share.open({
-                          urls: this.state.selectedPhotoUri,
+                          urls: this.state.sharePhotoUrl,
                           subject: "Share Link" //  for email
                          });
                          console.log('sharing...')
@@ -436,30 +434,43 @@ console.log('gagagaggagggagagagaggagga')
                     {imageURLs.map((image, index) =>{
                    
                    
-                  let imagePath ={uri: image.source.uri.split("DATE:").shift()}
-                  console.log(imagePath)
+                  //let imagePath ={uri: image.source.uri.split("DATE:").shift()}
+                  //console.log(imagePath)
                   console.log('-----------------')
                       console.log('selected',this.state.selectedPhotoUri)
 
-                    if(this.state.selectedPhotoUri.includes(image.source.uri)){
+                      function objectPropInArray(list, prop, val) {
+                        if (list.length > 0 ) {
+                          for (i in list) {
+                            if (list[i][prop] === val) {
+                              return true;
+                            }
+                          }
+                        }
+                        return false;  
+                      }
+
+                      const randomNum = (Math.floor(Math.random() * 1000) + index).toString()
+                    if(objectPropInArray(this.state.selectedPhotoUri, 'key', image.source.key)){
                       console.log('=======================',this.state.selectedPhotoUri)
                         return (
                           <TouchableOpacity
                           activeOpacity={0.9}
-                          key={image.source.uri}
+                          key={image.source.key+ randomNum}
                           onPress={()=> {
                           if(this.state.onLongPressOnPhoto){
-                           let index = this.state.selectedPhotoUri.indexOf(image.source.uri);
-                           if(index > -1){
-                            this.state.selectedPhotoUri.splice(index, 1);
-                            this.setState({changeState:100})
+                          // let index = this.state.selectedPhotoUri.indexOf(image.source.key);
+                           if(objectPropInArray(this.state.selectedPhotoUri, 'key', image.source.key)){
+                            let filtered = this.state.selectedPhotoUri.filter(function(el) { return el.key != image.source.key; });
+                            console.log('filtered==', filtered)
+                            this.setState({selectedPhotoUri: filtered ,changeState:100})
                             console.log('deleted uri==', this.state.selectedPhotoUri)
                             if(this.state.selectedPhotoUri.length <=0){
                                this.setState({onLongPressOnPhoto:false})
                               this.setState({changeState:120})
                             }
                            }
-                           if(this.state.selectedPhotoUri.length <=0){
+                         else  if(this.state.selectedPhotoUri.length <=0){
                               this.setState({onLongPressOnPhoto:false})
                             this.setState({changeState:120})
                           }
@@ -473,7 +484,7 @@ console.log('gagagaggagggagagagaggagga')
                             </View>
                           <Image 
                           style={{width:WIDTH/3.1, height: WIDTH/3.1, borderWidth:3, borderColor:'#0073ff'}}
-                           source={imagePath}
+                           source={image.source}
                            resizeMode="cover"
                           />
                         </TouchableOpacity>
@@ -485,17 +496,18 @@ console.log('gagagaggagggagagagaggagga')
                       return (
                         <TouchableOpacity
                         activeOpacity={0.9}
-                        key={image.source.uri}
+                        key={image.source.key + randomNum}
                         onPress={() => {
                           if(this.state.onLongPressOnPhoto){
-                            
-                           let index = this.state.selectedPhotoUri.indexOf(image.source.uri);
-                           if(index > -1){
-                            this.state.selectedPhotoUri.splice(index, 1);
-                            this.setState({changeState:100})
+                            let filtered = this.state.selectedPhotoUri.filter(function(el) { return el.key != image.source.key; });
+                            console.log('filtered==', filtered)
+                           //let index = this.state.selectedPhotoUri.indexOf(image.source.key);
+                           if(objectPropInArray(this.state.selectedPhotoUri, 'key', image.source)){
+                            //this.state.selectedPhotoUri.splice(index, 1);
+                            this.setState({selectedPhotoUri: filtered  ,changeState:100})
                           
                            }
-                           if(this.state.selectedPhotoUri.length <=0){
+                           else if(this.state.selectedPhotoUri.length <=0){
                               
                             this.setState({onLongPressOnPhoto:false})
                             this.setState({changeState:120})
@@ -503,7 +515,7 @@ console.log('gagagaggagggagagagaggagga')
                           else {
                           
                            
-                                this.state.selectedPhotoUri.push(image.source.uri)
+                                this.state.selectedPhotoUri.push(image.source)
                                  this.setState({changeState:15})   
                                 console.log('selected +++++++uris ==', this.state.selectedPhotoUri)
                               }  
@@ -522,7 +534,7 @@ console.log('gagagaggagggagagagaggagga')
                         onLongPress={()=> 
                         {
                           this.setState({onLongPressOnPhoto:true}, ()=> {
-                            this.state.selectedPhotoUri.push(image.source.uri)
+                            this.state.selectedPhotoUri.push(image.source)
                             this.setState({changeState:19870})
                             console.log('state selected uris ==', this.state)
                            
@@ -533,7 +545,7 @@ console.log('gagagaggagggagagagaggagga')
                         >
                           <Image 
                           style={{width:WIDTH/3.1, height: WIDTH/3.1, borderWidth:2, borderColor:'#fff'}}
-                           source={imagePath}
+                           source={image.source}
                            resizeMode="cover"
                           />
                         </TouchableOpacity>
@@ -545,7 +557,7 @@ console.log('gagagaggagggagagagaggagga')
                 </View>
                 <ImageView
                     glideAlways
-                    images={imagePaths}
+                    images={imageURLs}
                     imageIndex={this.state.imageIndex}
                     animationType="fade"
                     isVisible={this.state.isImageViewVisible}
@@ -663,6 +675,11 @@ console.log('gagagaggagggagagagaggagga')
         {
           this.state.showPDF ? (
             <View style={styles.container}>
+            <TouchableOpacity activeOpacity={0.9} onPress={()=> {
+              this.setState({showPDF:false})
+            }} style={{position:'absolute',backgroundColor:'rgba(0,0,0,0.6)', top:10,right:10, alignItems:'center', justifyContent:'center', zIndex:10000, width:40, height:40, borderRadius:20, }}>
+              <FontAwesome  name='times' size={20} style={{backgroundColor:'transparent'}} color='#fff'/>
+            </TouchableOpacity>
               <Pdf
                     source={this.state.pdfUri}
                     
@@ -695,7 +712,7 @@ const styles = StyleSheet.create({
       left:0,
       bottom:0,
       right:0,
-      
+      zIndex:999,
       alignItems: 'center',
   },
   pdf: {

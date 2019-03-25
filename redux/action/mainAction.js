@@ -264,11 +264,15 @@ export const addpdfinChapter =(data, sub, chap)=> {
 export const deletenotesFromUncatagorised = (data) =>{
     setLoading()
     console.log('data is====',data)
+    let data_key = data.map(item=> {
+        return item.key
+    })
+    console.log(data_key)
    
     ToastAndroid.show('Removing...', ToastAndroid.SHORT) 
     return {
         type: DELETE_NOTES_FROM_UNCATAGORISED,
-        payload: data
+        payload: data_key
         
     }
 }
@@ -298,15 +302,19 @@ export const deleteSubject = (data) =>{
 
 export const deletenotestoUncatagorisedinChapter = (data, sub) =>{
     setLoading()
-   // console.log(data)
+    console.log(data)
     ToastAndroid.show('Removing...', ToastAndroid.SHORT) 
-   
+    let data_key = data.map(item=> {
+        return item.key
+    })
+    console.log('=====++0000000000000000000=======')
+    console.log(data_key)
     
     return {
         type: DELETE_NOTES_FROM_UNCATAGORISED_IN_CHAPTER,
         payload: {
             subject_name:sub,
-            data:data
+            data:data_key
         }
         
         
@@ -334,13 +342,17 @@ export const deletenotesinChapter = (data, sub, chap) =>{
     setLoading()
     //console.log(data)
     ToastAndroid.show('Removing...', ToastAndroid.SHORT) 
+    let data_key = data.map(item=> {
+        return item.key
+    })
+    console.log(data_key)
     
     return {
         type: DELETE_NOTES_IN_CHAPTER,
         payload: {
             subject_name:sub,
             chapter_name:chap,
-            data:data
+            data:data_key
         }
         
         

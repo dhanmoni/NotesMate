@@ -92,17 +92,12 @@ class MainScreen extends Component {
             </TouchableOpacity>
         )
       }
+     
 
-      componentDidMount() {
-        BackHandler.addEventListener('hardwareBackPress', this.onBackPress.bind(this));
-    }
-
-    onBackPress(){
-      this.props.navigation.pop();
-      return false; 
-  }
 
   render() {
+
+
 
     const subjects = this.props.auth.subjects.map(item=> {
       return item

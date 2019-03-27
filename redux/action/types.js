@@ -3,6 +3,8 @@
 export const GET_SINGLE_SUBJECT = 'GET_SINGLE_SUBJECT';
 export const GET_SINGLE_CHAPTER = 'GET_SINGLE_CHAPTER';
 export const SET_LOADING = 'SET_LOADING';
+export const REMOVE_LOADING = 'REMOVE_LOADING';
+
 
 
 

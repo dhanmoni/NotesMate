@@ -67,7 +67,6 @@
 		65F7155A79794071A6B21541 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 36BFA47A10FC4208BC7718B4 /* SimpleLineIcons.ttf */; };
 		75CEDC6EFFD6419C82A9A848 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D92BCE3AC74544E189331DF9 /* Zocial.ttf */; };
 		DFFBE16ADE374447A429C65D /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BA2A99F29044BAB83B4AA63 /* libRNImagePicker.a */; };
-		7CC91405E67B4F4EB2AF7299 /* libimageCropPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C0385DD7AB14B058BE75643 /* libimageCropPicker.a */; };
 		8B2B841200D348EC82073733 /* libRNIKInteractiveImageLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C98862EB2B245698D317236 /* libRNIKInteractiveImageLibrary.a */; };
 		DB3C07B66291478F88615AC4 /* libRNDocumentPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B250736E25E4267B4C09E0E /* libRNDocumentPicker.a */; };
 		708EF8A314C24C13A397D2EA /* libRCTPdf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1939EEC5CC76492D980ADA50 /* libRCTPdf.a */; };
@@ -414,8 +413,6 @@
 		D92BCE3AC74544E189331DF9 /* Zocial.ttf */ = {isa = PBXFileReference; name = "Zocial.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		AD11AD7A1A5C44B68E7A8992 /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; name = "RNImagePicker.xcodeproj"; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		9BA2A99F29044BAB83B4AA63 /* libRNImagePicker.a */ = {isa = PBXFileReference; name = "libRNImagePicker.a"; path = "libRNImagePicker.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
-		8BA52672710D40079216BD5C /* imageCropPicker.xcodeproj */ = {isa = PBXFileReference; name = "imageCropPicker.xcodeproj"; path = "../node_modules/react-native-image-crop-picker/ios/imageCropPicker.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		2C0385DD7AB14B058BE75643 /* libimageCropPicker.a */ = {isa = PBXFileReference; name = "libimageCropPicker.a"; path = "libimageCropPicker.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		D31CD9399D6B4D1F836D1F9A /* RNIKInteractiveImageLibrary.xcodeproj */ = {isa = PBXFileReference; name = "RNIKInteractiveImageLibrary.xcodeproj"; path = "../node_modules/react-native-interactive-image-gallery/ios/RNIKInteractiveImageLibrary.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		0C98862EB2B245698D317236 /* libRNIKInteractiveImageLibrary.a */ = {isa = PBXFileReference; name = "libRNIKInteractiveImageLibrary.a"; path = "libRNIKInteractiveImageLibrary.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		266FA30B09D5493A9D702704 /* RNDocumentPicker.xcodeproj */ = {isa = PBXFileReference; name = "RNDocumentPicker.xcodeproj"; path = "../node_modules/react-native-document-picker/ios/RNDocumentPicker.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
@@ -462,7 +459,6 @@
 				7FDD3E68B5BC4CD185A9EFA9 /* libRNGestureHandler.a in Frameworks */,
 				AFD8BD5188B94FF5B890F41F /* libRNVectorIcons.a in Frameworks */,
 				DFFBE16ADE374447A429C65D /* libRNImagePicker.a in Frameworks */,
-				7CC91405E67B4F4EB2AF7299 /* libimageCropPicker.a in Frameworks */,
 				8B2B841200D348EC82073733 /* libRNIKInteractiveImageLibrary.a in Frameworks */,
 				DB3C07B66291478F88615AC4 /* libRNDocumentPicker.a in Frameworks */,
 				708EF8A314C24C13A397D2EA /* libRCTPdf.a in Frameworks */,
@@ -664,7 +660,6 @@
 				7039B19E2B6044D18E1F5019 /* RNGestureHandler.xcodeproj */,
 				495A689311984553BA20EE92 /* RNVectorIcons.xcodeproj */,
 				AD11AD7A1A5C44B68E7A8992 /* RNImagePicker.xcodeproj */,
-				8BA52672710D40079216BD5C /* imageCropPicker.xcodeproj */,
 				D31CD9399D6B4D1F836D1F9A /* RNIKInteractiveImageLibrary.xcodeproj */,
 				266FA30B09D5493A9D702704 /* RNDocumentPicker.xcodeproj */,
 				1D55E79BBE3549E6B52EA22A /* RCTPdf.xcodeproj */,
@@ -1354,10 +1349,6 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MyStudyNotes.app/MyStudyNotes";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1394,10 +1385,6 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MyStudyNotes.app/MyStudyNotes";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1509,10 +1496,6 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1557,10 +1540,6 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1604,10 +1583,6 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1651,10 +1626,6 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",

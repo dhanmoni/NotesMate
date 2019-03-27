@@ -5,11 +5,12 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 
 import {connect} from 'react-redux'
-import {addName, addSubject, deleteSubject, getSingleSubject, setAdTimeForDeleteSubject} from '../redux/action/mainAction'
+import {addName, addSubject, deleteSubject, getSingleSubject, setAdTimeForDeleteSubject, setLoading, deletepdfFromUncatagorised, deletepdftoUncatagorisedinChapter} from '../redux/action/mainAction'
 import Modal from 'react-native-modal'
 import { BannerView, InterstitialAdManager  } from 'react-native-fbads'
 
 
+import RNFetchBlob from 'rn-fetch-blob'
 
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height
@@ -61,6 +62,7 @@ class MainScreen extends Component {
       
   
       _renderItem=(item, index)=> {
+        
         //console.log('item is ', item)
         const colors = ['#8e44ad', '#3498db','#fff200', '#2c3e50', '#6c5ce7', '#0073ff', '#26de81'];
         let string = item.subject_name;
@@ -69,6 +71,8 @@ class MainScreen extends Component {
         return (
           <TouchableOpacity  activeOpacity={0.88} onPress={()=> {
            this.props.getSingleSubject(item)
+
+
             this.props.navigation.navigate('SubScreen')
             }} style={{marginTop:20, marginHorizontal:10,height:HEIGHT/11, backgroundColor:'#fff',paddingHorizontal:10, padding:4, justifyContent:'space-between', flexDirection:'row',alignItems:'center', borderRadius:10, elevation:4}}>
 
@@ -93,9 +97,11 @@ class MainScreen extends Component {
         )
       }
      
+      
 
 
   render() {
+
 
 
 
@@ -173,7 +179,9 @@ class MainScreen extends Component {
                        
                     </View>
                    
-                    <TouchableOpacity activeOpacity={0.88} onPress={()=> this.props.navigation.navigate('UnCatagorised')} style={{marginTop:20, paddingHorizontal:20, backgroundColor:'#f5f5f5', padding:4, justifyContent:'space-between', flexDirection:'row'}}>
+                    <TouchableOpacity activeOpacity={0.88} onPress={()=> {
+                     // this.props.setLoading()
+                      this.props.navigation.navigate('UnCatagorised')}} style={{marginTop:20, paddingHorizontal:20, backgroundColor:'#f5f5f5', padding:4, justifyContent:'space-between', flexDirection:'row'}}>
                         <Text style={{fontFamily:'Quicksand-Bold', fontSize:18, color:'#000',}}>Uncatagorised </Text>
                         <FontAwesome name="angle-right" size={23} color="#000"/>
                     </TouchableOpacity>
@@ -205,13 +213,13 @@ class MainScreen extends Component {
                 <View style={{ flexDirection:'row', marginBottom:20,marginTop:30, justifyContent:'space-around'}}>
                 <TouchableOpacity style={{alignItems:"center",padding:5,width:30+'%', borderRadius:10, justifyContent:'center', backgroundColor:'#bdc3c7'}} onPress={()=> {
                  
-                  this.setState({isSubjectModalVisible:false})}}>
+                  this.setState({isSubjectModalVisible:false, subject_name:''})}}>
                   <Text style={{fontFamily:'Quicksand-Medium', fontSize:18, color:'#fff'}}>Cancel</Text>
                 </TouchableOpacity>
               <TouchableOpacity style={{alignItems:"center",padding:5,width:30+'%', borderRadius:10, justifyContent:'center', backgroundColor:'#0073ff'}} onPress={()=> {
                 this.props.addSubject(this.state)
                 
-                 this.setState({isSubjectModalVisible:false})}}>
+                 this.setState({isSubjectModalVisible:false, subject_name:''})}}>
                 <Text style={{fontFamily:'Quicksand-Medium', fontSize:18, color:'#fff'}}>Save</Text>
               </TouchableOpacity>
             </View>
@@ -232,4 +240,4 @@ const mapStateToProps = (state)=> {
   
 
 
-export default connect(mapStateToProps,{addName, addSubject, deleteSubject, getSingleSubject, setAdTimeForDeleteSubject})(MainScreen)
+export default connect(mapStateToProps,{addName, addSubject,setLoading, deleteSubject,deletepdfFromUncatagorised, getSingleSubject, setAdTimeForDeleteSubject, deletepdftoUncatagorisedinChapter})(MainScreen)

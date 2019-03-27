@@ -25,6 +25,7 @@ import { ADD_SUBJECT,
         DELETE_SUBJECT_AD_EXPIRATION,
         EDIT_CHAPTER_AD_EXPIRATION,
         DELETE_NOTES_FROMUNCATAGORISED_IN_SUBJECT_AD_EXPIRATION,
+        REMOVE_LOADING,
         
 
     } from '../action/types'
@@ -55,6 +56,11 @@ export default function(state= initialState, action){
                 loading:true
             }
 
+        case REMOVE_LOADING:
+            return{
+                ...state,
+                loading:false
+            }
             //ADD
         case ADD_SUBJECT:
             return{
@@ -118,6 +124,8 @@ export default function(state= initialState, action){
 
 
             case ADD_PDF_TO_UNCATAGORISED_IN_CHAPTER:
+            console.log('--------------------------------')
+            console.log(action.payload)
             return {
                 ...state,
                 singleSubject: {
@@ -294,10 +302,16 @@ export default function(state= initialState, action){
                 loading:false,
             }
         case DELETE_PDF_FROM_UNCATAGORISED:
+                payload_data = action.payload;
+                        console.log('pdf delting.......................................', action.payload)
+            //     let myPDFArray = state.uncatagorised_documents.filter( el=> {
+            //         console.log(el)
+            //         el.fileKey !== action.payload;
+            //    } )
+            //    console.log(myPDFArray)
             return{
                 ...state,
-                uncatagorised_documents: state.uncatagorised_documents.filter(document =>
-                     document.fileUri !== action.payload),
+                uncatagorised_documents:  state.uncatagorised_documents.filter(item=> item.fileKey !== action.payload),
                 loading:false
             }
         case DELETE_NOTES_FROM_UNCATAGORISED:
@@ -335,7 +349,7 @@ export default function(state= initialState, action){
                    uncatagorised_note:{
                     ...state.singleSubject.uncatagorised_note,
                     documents: state.singleSubject.uncatagorised_note.documents.filter(document =>
-                        document.fileUri !== action.payload.data),
+                        document.fileKey !== action.payload.data),
                    }
                 },
                subjects: state.subjects.map(
@@ -344,7 +358,7 @@ export default function(state= initialState, action){
                     uncatagorised_note:{
                         ...sub.uncatagorised_note,
                         documents:sub.uncatagorised_note.documents.filter(document =>
-                            document.fileUri !== action.payload.data),
+                            document.fileKey !== action.payload.data),
                         }
                 }: sub ),
                 loading:false
@@ -458,7 +472,7 @@ export default function(state= initialState, action){
                     notes:{
                         ...state.singleChapter.notes,
                         documents:   state.singleChapter.notes.documents.filter(document =>
-                            document.fileUri !== action.payload.data),
+                            document.fileKey !== action.payload.data),
                     }
                 },
                 singleSubject: {
@@ -468,7 +482,7 @@ export default function(state= initialState, action){
                        notes:{
                            ...chap.notes,
                            documents: chap.notes.documents.filter(document =>
-                            document.fileUri !== action.payload.data),
+                            document.fileKey !== action.payload.data),
                        }
                     } : chap),
                   
@@ -481,7 +495,7 @@ export default function(state= initialState, action){
                            notes:{
                                ...chap.notes,
                                documents: chap.notes.documents.filter(document =>
-                                document.fileUri !== action.payload.data),
+                                document.fileKey !== action.payload.data),
                            }
                         } : chap),
                 }: sub ),

@@ -1,4 +1,4 @@
-import { ADD_NAME, ADD_SUBJECT, DELETE_SUBJECT, GET_SINGLE_SUBJECT, SET_LOADING, ADD_NOTES_TO_UNCATAGORISED, ADD_PDF_TO_UNCATAGORISED, DELETE_PDF_FROM_UNCATAGORISED, DELETE_NOTES_FROM_UNCATAGORISED, ADD_CHAPTER, DELETE_CHAPTER, ADD_NOTES_TO_UNCATAGORISED_IN_CHAPTER, ADD_PDF_TO_UNCATAGORISED_IN_CHAPTER, EDIT_SUBJECT, EDIT_CHAPTER, DELETE_NOTES_FROM_UNCATAGORISED_IN_CHAPTER, DELETE_PDF_FROM_UNCATAGORISED_IN_CHAPTER, GET_SINGLE_CHAPTER, ADD_NOTES_IN_CHAPTER, ADD_PDF_IN_CHAPTER, DELETE_NOTES_IN_CHAPTER, DELETE_PDF_IN_CHAPTER, ADD_PDF_TOUNCATAGORISED_AD_EXPIRATION, DELETE_SUBJECT_AD_EXPIRATION, EDIT_CHAPTER_AD_EXPIRATION, ADD_NOTES_TOUNCATAGORISED_AD_EXPIRATION, ADD_NOTES_TOUNCATAGORISED_IN_SUBJECT_AD_EXPIRATION, DELETE_NOTES_FROMUNCATAGORISED_IN_SUBJECT_AD_EXPIRATION } from "./types";
+import { ADD_NAME, ADD_SUBJECT, DELETE_SUBJECT, GET_SINGLE_SUBJECT, SET_LOADING, ADD_NOTES_TO_UNCATAGORISED, ADD_PDF_TO_UNCATAGORISED, DELETE_PDF_FROM_UNCATAGORISED, DELETE_NOTES_FROM_UNCATAGORISED, ADD_CHAPTER, DELETE_CHAPTER, ADD_NOTES_TO_UNCATAGORISED_IN_CHAPTER, ADD_PDF_TO_UNCATAGORISED_IN_CHAPTER, EDIT_SUBJECT, EDIT_CHAPTER, DELETE_NOTES_FROM_UNCATAGORISED_IN_CHAPTER, DELETE_PDF_FROM_UNCATAGORISED_IN_CHAPTER, GET_SINGLE_CHAPTER, ADD_NOTES_IN_CHAPTER, ADD_PDF_IN_CHAPTER, DELETE_NOTES_IN_CHAPTER, DELETE_PDF_IN_CHAPTER, ADD_PDF_TOUNCATAGORISED_AD_EXPIRATION, DELETE_SUBJECT_AD_EXPIRATION, EDIT_CHAPTER_AD_EXPIRATION, ADD_NOTES_TOUNCATAGORISED_AD_EXPIRATION, ADD_NOTES_TOUNCATAGORISED_IN_SUBJECT_AD_EXPIRATION, DELETE_NOTES_FROMUNCATAGORISED_IN_SUBJECT_AD_EXPIRATION, REMOVE_LOADING } from "./types";
 import { ToastAndroid} from 'react-native'
 
 import { BannerView, InterstitialAdManager  } from 'react-native-fbads'
@@ -79,6 +79,12 @@ export const setAdTimeForDeleteNotestoUncatagorisedInSubject = (data)=> {
 export const setLoading = ()=> {
     return {
         type: SET_LOADING
+    }
+}
+
+export const removeLoading = ()=> {
+    return {
+        type: REMOVE_LOADING
     }
 }
 export const addSubject = (data) =>{
@@ -189,10 +195,7 @@ export const addnotestoUncatagorised = (data) =>{
 
 export const addPdftoUncatagorised = (data) =>{
     setLoading()
-   // console.log(data)
-   //324550781538284_324676158192413
-   
-    
+  
     return {
         type: ADD_PDF_TO_UNCATAGORISED,
         payload: data
@@ -221,7 +224,7 @@ export const addnotestoUncatagorisedinChapter = (data, sub) =>{
 
 export const addpdftoUncatagorisedinChapter = (data, sub) =>{
     setLoading()
-    //console.log(data)
+    
     
     
     return {
@@ -269,7 +272,7 @@ export const deletenotesFromUncatagorised = (data) =>{
     })
     console.log(data_key)
    
-    ToastAndroid.show('Removing...', ToastAndroid.SHORT) 
+    //ToastAndroid.show('Removing...', ToastAndroid.SHORT) 
     return {
         type: DELETE_NOTES_FROM_UNCATAGORISED,
         payload: data_key
@@ -277,9 +280,20 @@ export const deletenotesFromUncatagorised = (data) =>{
     }
 }
 
+export const deleteNoUrlNotesFromUncatagorised = (data)=> {
+    let data_key = data.map(item=> {
+        return item.key
+    })
+    console.log(data_key)
+    return {
+        type: DELETE_NOTES_FROM_UNCATAGORISED,
+        payload: data_key
+    }
+}
+
 export const deletepdfFromUncatagorised = (data) =>{
     setLoading()
-    //console.log(data)
+    console.log(data)
    
     
     return {
@@ -303,11 +317,11 @@ export const deleteSubject = (data) =>{
 export const deletenotestoUncatagorisedinChapter = (data, sub) =>{
     setLoading()
     console.log(data)
-    ToastAndroid.show('Removing...', ToastAndroid.SHORT) 
+   // ToastAndroid.show('Removing...', ToastAndroid.SHORT) 
     let data_key = data.map(item=> {
         return item.key
     })
-    console.log('=====++0000000000000000000=======')
+   
     console.log(data_key)
     
     return {
@@ -341,7 +355,7 @@ export const deletepdftoUncatagorisedinChapter = (data, sub) =>{
 export const deletenotesinChapter = (data, sub, chap) =>{
     setLoading()
     //console.log(data)
-    ToastAndroid.show('Removing...', ToastAndroid.SHORT) 
+   // ToastAndroid.show('Removing...', ToastAndroid.SHORT) 
     let data_key = data.map(item=> {
         return item.key
     })
@@ -363,7 +377,7 @@ export const deletenotesinChapter = (data, sub, chap) =>{
 export const deletepdfinChapter = (data, sub, chap) =>{
     setLoading()
    // console.log(data)
-    ToastAndroid.show('Removing...', ToastAndroid.SHORT) 
+   // ToastAndroid.show('Removing...', ToastAndroid.SHORT) 
     
     return {
         type: DELETE_PDF_IN_CHAPTER,

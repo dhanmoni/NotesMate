@@ -49,12 +49,80 @@ class SubScreen extends Component {
           onLongPressOnPhoto:false,
           selectedPhotoUri:[],
           changeState:null,
-          sharePhotoUrl:[]
+          existsPDF:[]
         }
       }
+
+      componentWillMount(){
+        let imageTobeDeleted=[]
+
+        this.props.auth.singleSubject.uncatagorised_note.photos.map(image=> {
+          if(image.length >=1){
+    
+  
+            return image.map(image=> {
+              RNFetchBlob.fs.exists(image.path)
+              .then((data) => {
+               
+                if(data === false){
+                  imageTobeDeleted.push({
+                    uri:image.path,
+                    key:image.path +'DATE:'+ image.modificationDate
+                  })
+                  this.props.deletenotestoUncatagorisedinChapter(imageTobeDeleted, this.props.auth.singleSubject.subject_name)
+                 
+                } else {
+                  console.log('image exists')
+               
+                 
+                }
+              }) 
+            }
+            )
+           }
+           else {
+    
+            RNFetchBlob.fs.exists(image.path)
+              .then((data) => {
+               
+                if(data === false){
+                  imageTobeDeleted.push({
+                    uri:image.path,
+                    key:image.path +'DATE:'+ image.modificationDate
+                  })
+                  this.props.deletenotestoUncatagorisedinChapter(imageTobeDeleted, this.props.auth.singleSubject.subject_name)
+                 
+                } else {
+                  console.log('image exists here too')
+               
+                 
+                }
+              }) 
+              
+            }
+        })
+      }
+
       componentDidMount(){
         this.setState({subject_name: this.props.auth.singleSubject.subject_name,
           prev_subject_name: this.props.auth.singleSubject.subject_name,
+        })
+        this.props.auth.singleSubject.uncatagorised_note.documents.map(pdf=> {
+          if(pdf !== null){
+            
+            RNFetchBlob.fs.exists(pdf.fileUri)
+            .then((data) => {
+              
+              if(data === false){
+               
+                this.props.deletepdftoUncatagorisedinChapter(pdf.fileKey, this.props.auth.singleSubject.subject_name)
+              
+              } else {
+              
+                console.log('here')
+              }
+            })  
+          }
         })
        // BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
       }
@@ -127,10 +195,12 @@ class SubScreen extends Component {
                     fileUri: 'file://'+ stats.path,
                     fileType: stats.type,
                     fileName: stats.filename,
-                    fileSize: stats.size  
+                    fileSize: stats.size ,
+                    fileKey: stats.path+'DATE:'+ Date.now() 
                   },
                   },()=> {
-                    this.props.addpdftoUncatagorisedinChapter(this.state.uncatagorised_documents_in_chapter, this.state.subject_name)
+                    this.props.addpdftoUncatagorisedinChapter(this.state.uncatagorised_documents_in_chapter, 
+                      this.props.auth.singleSubject.subject_name)
                   //  console.log('state pdf=', this.state.uncatagorised_documents_in_chapter)
                 });
                 this.setState({fileUri:res.uri})
@@ -244,56 +314,63 @@ class SubScreen extends Component {
           }
 
       _renderPDF=(item, index)=> {
+
         
-        //console.log('item is ', item)
-        return (
-          <TouchableOpacity activeOpacity={0.9}  onPress={()=> {this.setState({showPDF:true, pdfUri:{uri: item.fileUri}}) }} style={{marginTop:10, marginHorizontal:10, backgroundColor:'#fff', padding:6, flexDirection:'row',justifyContent:'space-between', alignItems:'center', width:WIDTH-20, borderRadius:8,marginBottom:4, elevation:4}}>
-                     <View style={{justifyContent:'space-between',flexDirection:'row', alignItems:'center',}}>
 
-                  
-                    <View style={{alignItems:'center', flexDirection:'row',padding:0, margin:0, backgroundColor:'#eea3a4', justifyContent:'flex-start', width:80+'%', overflow:'hidden'}}>
-                      <Icon name="file-pdf" style={{padding:7}} size={26} color="#ff0000"/>
-                      <View style={{marginLeft:2,backgroundColor:'#a5a677',justifyContent:'flex-start', width: 90+'%'}}>
-                      <Text numberOfLines={1} style={{fontFamily:'Quicksand-Medium',padding:7, fontSize:14, color:'#000'}}>{item.fileName}</Text>
-                      
-                      </View>
-                      </View>
-                      <View style={{alignItems:'center', flexDirection:'row',marginRight:5, backgroundColor:'red'}}>
-                      <TouchableOpacity
-                      activeOpacity={0.9}
-                      onPress={()=>{
-                        console.log('file uri==')
-                        console.log(item)
-                        this.setState({fileToShare:item.fileUri}, ()=> {
-                          Share.open({
-                            url: this.state.fileToShare,
-                            subject: "Share Link" //  for email
-                            });
-                        })
+        
+          return (
+            <TouchableOpacity activeOpacity={0.9}  onPress={()=> {this.setState({showPDF:true, pdfUri:{uri: item.fileUri}}) }} style={{marginTop:10, marginHorizontal:10, backgroundColor:'#fff', padding:6, flexDirection:'row',justifyContent:'space-between', alignItems:'center', width:WIDTH-20, borderRadius:8,marginBottom:4, elevation:4}}>
+                       <View style={{justifyContent:'space-between',flexDirection:'row', alignItems:'center',}}>
+  
+                    
+                      <View style={{alignItems:'center', flexDirection:'row',padding:0, margin:0,  justifyContent:'flex-start', width:77+'%', overflow:'hidden'}}>
+                        <Icon name="file-pdf" style={{padding:7}} size={26} color="#ff0000"/>
+                        <View style={{marginLeft:2,justifyContent:'flex-start', width: 85+'%'}}>
+                        <Text numberOfLines={1} style={{fontFamily:'Quicksand-Medium',padding:7, fontSize:14, color:'#000'}}>{item.fileName}</Text>
                         
-                      }}
-                      style={{backgroundColor:'#fff', elevation:5, borderRadius:100, alignItems:'center', justifyContent:'center',marginRight:5}}>
-                      <FontAwesome name="share-alt" color="#0073ff" style={{padding:7}} size={22}/>
-                      </TouchableOpacity>
+                        </View>
+                        </View>
+                        <View style={{alignItems:'center', flexDirection:'row',marginRight:5, }}>
                         <TouchableOpacity
-                        onPress={()=> this.deletepdf(item.fileUri)}
-                        style={{backgroundColor:'#fff', elevation:5, borderRadius:100, alignItems:'center', justifyContent:'center'}}>
-                        <Icon name="trash-alt" color="#ff0000" style={{padding:7}} size={20}/>
-
+                        activeOpacity={0.9}
+                        onPress={()=>{
+                          console.log('file uri==')
+                          console.log(item)
+                          this.setState({fileToShare:item.fileUri}, ()=> {
+                            Share.open({
+                              url: this.state.fileToShare,
+                              subject: "Share Link" //  for email
+                              });
+                          })
+                          
+                        }}
+                        style={{backgroundColor:'#fff', elevation:5, borderRadius:100, alignItems:'center', justifyContent:'center',marginRight:5}}>
+                        <FontAwesome name="share-alt" color="#0073ff" style={{padding:7}} size={22}/>
                         </TouchableOpacity>
+                          <TouchableOpacity
+                          onPress={()=> this.deletepdf(item.fileKey)}
+                          style={{backgroundColor:'#fff', elevation:5, borderRadius:100, alignItems:'center', justifyContent:'center'}}>
+                          <Icon name="trash-alt" color="#ff0000" style={{padding:7}} size={20}/>
+  
+                          </TouchableOpacity>
+                        </View>
+  
                       </View>
-
-                    </View>
-                                          
-
-                      
-            </TouchableOpacity>
-        )
+                                            
+  
+                        
+              </TouchableOpacity>
+          )
+       
+       
       }
+
+     
 
   render() {
 
    
+    
     
     const images = [];
     const imageURLs=[];
@@ -304,31 +381,23 @@ class SubScreen extends Component {
       if(image.length >=1){
       
         return image.map(image=> {
-          if(
-            RNFetchBlob.fs.isDir(image.path)
-          ){
-            console.log('it exists')
-            images.push(image)
-            imageURLs.push({
-               source:{
-                uri:image.path,
-                 key:image.path +'DATE:'+ image.modificationDate
-               },
-               
-             })
+
+          console.log('it exists')
+          images.push(image)
+          imageURLs.push({
+             source:{
+              uri:image.path,
+               key:image.path +'DATE:'+ image.modificationDate
+             },
              
-          } else {
-            console.log('it doesnot exists')
-          }
-          
+           })
+           
         
-        // console.log('image url: ', imageURLs)
-        }
-        )
+      }
+      )
        }
        else {
-       if(RNFetchBlob.fs.isDir(image.path)){
-         console.log('it exists here too')
+        console.log('it exists here too')
         images.push(image)
         imageURLs.push({
          source:{
@@ -337,22 +406,20 @@ class SubScreen extends Component {
          },
           
         })
-       
-       }
-       else{
-         console.log('it doesnot exists here too')
-       }
-         
        }
       
     })
+    let sharePhotoUrl=[]
 
     this.state.selectedPhotoUri.map(item=> {
+      
       console.log('item+++', item)
-        this.state.sharePhotoUrl.push(item.uri)
-        console.log(this.state.sharePhotoUrl)
+      console.log(sharePhotoUrl)
+     sharePhotoUrl.push(item.uri)
+        
     })
 
+    
     
     const chapters = this.props.auth.singleSubject.chapter.map(chapter=> {
       return chapter
@@ -394,7 +461,7 @@ class SubScreen extends Component {
                       <TouchableOpacity activeOpacity={0.8} 
                       onPress={()=>{  
                          Share.open({
-                          urls: this.state.sharePhotoUrl,
+                          urls: sharePhotoUrl,
                           subject: "Share Link" //  for email
                          });
                         // console.log('sharing...')
@@ -623,7 +690,7 @@ class SubScreen extends Component {
                                changeState:4
                            })}
                              }}
-                          delayLongPress={100}
+                         // delayLongPress={100}
                           
                          onLongPress={()=> 
                          {
@@ -679,6 +746,9 @@ class SubScreen extends Component {
                         </LinearGradient>
                                         
                     </TouchableOpacity> */}
+                     <View style={{ alignItems:'center', width:WIDTH,}}>
+                  <Text  style={{color:'#000',marginHorizontal:10, padding:2,fontSize:12,fontFamily:'Quicksand-Regular'}}>NOTE: NotesMate only stores the location of the files or images, so if you delete the files or images from your device, these will be deleted from here too!</Text>
+                </View>
 
                   </View>
                   
@@ -687,9 +757,7 @@ class SubScreen extends Component {
                 )
               }
               </View>
-              <View style={{ alignItems:'center', width:WIDTH,}}>
-                <Text  style={{color:'#000',marginHorizontal:10, padding:2,fontSize:12,fontFamily:'Quicksand-Bold'}}>NOTE: NotesMate only stores the location of the files or images, so if you delete the files or images from your device, these will be deleted from here too!</Text>
-              </View>
+             
                {/*************************************************************************************************************************************************************************************************************************************************document*******************************************************************************************************************************************/}
                <View style={{marginTop:20}}>
               <TouchableOpacity activeOpacity={0.85} onPress={this.state.showDocument ? ()=> {
@@ -801,13 +869,13 @@ class SubScreen extends Component {
                 <View style={{ flexDirection:'row', marginBottom:20,marginTop:30, justifyContent:'space-around'}}>
                 <TouchableOpacity style={{alignItems:"center",padding:5,width:30+'%', borderRadius:10, justifyContent:'center', backgroundColor:'#bdc3c7'}} onPress={()=> {
                  
-                  this.setState({isChapterModalVisible:false})}}>
+                  this.setState({isChapterModalVisible:false, chapter_name:''})}}>
                   <Text style={{fontFamily:'Quicksand-Medium', fontSize:18, color:'#fff'}}>Cancel</Text>
                 </TouchableOpacity>
               <TouchableOpacity style={{alignItems:"center",padding:5,width:30+'%', borderRadius:10, justifyContent:'center', backgroundColor:'#0073ff'}} onPress={()=> {
                this.props.addChapter(this.state)
                 
-                 this.setState({isChapterModalVisible:false})}}>
+                 this.setState({isChapterModalVisible:false, chapter_name:''})}}>
                 <Text style={{fontFamily:'Quicksand-Medium', fontSize:18, color:'#fff'}}>Save</Text>
               </TouchableOpacity>
             </View>

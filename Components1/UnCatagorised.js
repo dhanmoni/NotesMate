@@ -4,7 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import ImagePicker from 'react-native-image-crop-picker';
-import {addName, addSubject, deleteSubject, addnotestoUncatagorised, addPdftoUncatagorised, deletenotesFromUncatagorised, deletepdfFromUncatagorised, setAdTimeForAddPdftoUncatagorised, setAdTimeForAddNotestoUncatagorised} from '../redux/action/mainAction'
+import {addName, addSubject, deleteSubject, addnotestoUncatagorised, addPdftoUncatagorised, deletenotesFromUncatagorised, deletepdfFromUncatagorised, setAdTimeForAddPdftoUncatagorised, setAdTimeForAddNotestoUncatagorised, removeLoading, deleteNoUrlNotesFromUncatagorised} from '../redux/action/mainAction'
 import {connect} from 'react-redux'
 import {
   DocumentPicker,
@@ -40,15 +40,27 @@ class UnCatagorised extends Component {
           selectedPhoto:[],
           selectedPhotoUri:[],
           changeState:0,
-          sharePhotoUrl:[]
+         // sharePhotoUrl:[],
+         existsPDF: [],
+         loading:false,
+         NotexistsNotes:[],
         }
       
       }
 
       selectphoto(){
         ImagePicker.openPicker({
-          multiple: true
+          multiple: true,
+          //includeBase64: true,
+          mediaType:'photo',
+          avoidEmptySpaceAroundImage:false
+         // includeBase64:true
         }).then(images => {
+          // console.log('========++++++++++++++++++++++++++++++++=======')
+          // console.log(images)
+          // console.log('5555555555555555555555555555555555')
+          // const localImageUrl =  URL.createObjectURL(images[0].data);
+          // console.log(localImageUrl)
           this.setState({photos: images}, ()=> {
             this.props.addnotestoUncatagorised(this.state.photos)
             let expirationDate = this.props.auth.AddNotestoUncatagorisedAdExpiraion;
@@ -106,26 +118,25 @@ class UnCatagorised extends Component {
         DocumentPicker.show(
           {
             filetype: [DocumentPickerUtil.pdf()],
-            //All type of Files DocumentPickerUtil.allFiles()
-            //Only PDF DocumentPickerUtil.pdf()
-            //Audio DocumentPickerUtil.audio()
-            //Plain Text DocumentPickerUtil.plainText()
+          
           },
           (error, res) => {
             try {
               RNFetchBlob.fs.stat(res.uri)
               .then((stats) => {
-                console.log('res is====================')
-              console.log(stats)
+               
               this.setState({
                 pdf:{
                   fileUri: 'file://'+ stats.path,
                   fileType: stats.type,
                   fileName: stats.filename,
-                  fileSize: stats.size 
+                  fileSize: stats.size ,
+                  fileKey: stats.path+'DATE:'+ Date.now()
                 },
                 },()=> {
                   this.props.addPdftoUncatagorised(this.state.pdf)
+                
+                 
                   let expirationDate = this.props.auth.AddPdftoUncatagorisedAdExpiraion;
                   let date = new Date(expirationDate)
                   if(!date || new Date() > date){
@@ -198,27 +209,99 @@ class UnCatagorised extends Component {
           )
           }
        
-     
+         
+          componentWillMount(){
+
+            let imageTobeDeleted=[]
+
+            this.props.auth.uncatagorised_photos.map(image=> {
+              if(image.length >=1){
+        
+      
+                return image.map(image=> {
+                  RNFetchBlob.fs.exists(image.path)
+                  .then((data) => {
+                   
+                    if(data === false){
+                      imageTobeDeleted.push({
+                        uri:image.path,
+                        key:image.path +'DATE:'+ image.modificationDate
+                      })
+                      this.props.deletenotesFromUncatagorised(imageTobeDeleted)
+                     
+                    } else {
+                      console.log('image exists')
+                   
+                     
+                    }
+                  }) 
+                }
+                )
+               }
+               else {
+        
+                RNFetchBlob.fs.exists(image.path)
+                  .then((data) => {
+                   
+                    if(data === false){
+                      imageTobeDeleted.push({
+                        uri:image.path,
+                        key:image.path +'DATE:'+ image.modificationDate
+                      })
+                      this.props.deletenotesFromUncatagorised(imageTobeDeleted)
+                     
+                    } else {
+                      console.log('image exists here too')
+                   
+                     
+                    }
+                  }) 
+                  
+                }
+            })
+
+            this.props.auth.uncatagorised_documents.map(item=> {
+          
+             
+              if(item !== null){
+                RNFetchBlob.fs.exists(item.fileUri)
+                .then((data) => {
+                 
+                  if(data === false){
+                    this.props.deletepdfFromUncatagorised(item.fileKey)
+                   
+                  } else {
+                    console.log('file exists')
+                 
+                   
+                  }
+                })  
+              }
+             
+            })
+    
+            
+          }
       
       _renderPDF=(item, index)=> {
-        // let shareOptions = {
         
-        //   subject: "Share Link" //  for email
-        // };
-       // console.log('item is ', item)
+        
+
+        console.log('the pdf exists')
+        
         return (
           <TouchableOpacity activeOpacity={0.9}  onPress={()=> {this.setState({showPDF:true, pdfUri:{uri: item.fileUri}}) }} style={{marginTop:10, backgroundColor:'#fff', padding:6, flexDirection:'row',justifyContent:'flex-start', alignItems:'center',width:WIDTH-20, borderRadius:8,marginBottom:4, elevation:4}}>
                 <View style={{justifyContent:'space-between',flexDirection:'row', alignItems:'center',}}>
 
                   
-                   <View style={{alignItems:'center', flexDirection:'row',padding:0, margin:0, backgroundColor:'#eea3a4', justifyContent:'flex-start', width:80+'%', overflow:'hidden'}}>
+                   <View style={{alignItems:'center', flexDirection:'row',padding:0, margin:0,  justifyContent:'flex-start', width:77+'%', overflow:'hidden',}}>
                      <Icon name="file-pdf" style={{padding:7}} size={26} color="#ff0000"/>
-                      <View style={{marginLeft:2,backgroundColor:'#a5a677',justifyContent:'flex-start', width: 90+'%'}}>
+                      <View style={{marginLeft:2,justifyContent:'flex-start', width: 85+'%'}}>
                       <Text numberOfLines={1} style={{fontFamily:'Quicksand-Medium',padding:7, fontSize:14, color:'#000'}}>{item.fileName}</Text>
                       
                       </View>
                      </View>
-                     <View style={{alignItems:'center', flexDirection:'row',marginRight:5, backgroundColor:'red'}}>
+                     <View style={{alignItems:'center', flexDirection:'row',marginRight:5}}>
                      <TouchableOpacity
                      activeOpacity={0.9}
                       onPress={()=>{
@@ -236,7 +319,7 @@ class UnCatagorised extends Component {
                      <FontAwesome name="share-alt" color="#0073ff" style={{padding:7}} size={22}/>
                      </TouchableOpacity>
                        <TouchableOpacity
-                       onPress={()=> this.deletepdf(item.fileUri)}
+                       onPress={()=> this.deletepdf(item.fileKey)}
                        style={{backgroundColor:'#fff', elevation:5, borderRadius:100, alignItems:'center', justifyContent:'center'}}>
                        <Icon name="trash-alt" color="#ff0000" style={{padding:7}} size={20}/>
 
@@ -251,7 +334,7 @@ class UnCatagorised extends Component {
             </TouchableOpacity>
         )
       }
-     
+
 
   render() {
 
@@ -262,15 +345,17 @@ class UnCatagorised extends Component {
     const images = [];
     const imageURLs=[];
   
+
+   
+
     this.props.auth.uncatagorised_photos.map(image=> {
       
-         
-       if(image.length >=1){
+       
+      if(image.length >=1){
+        
       
         return image.map(image=> {
-          if(
-            RNFetchBlob.fs.isDir(image.path)
-          ){
+
             console.log('it exists')
             images.push(image)
             imageURLs.push({
@@ -280,18 +365,14 @@ class UnCatagorised extends Component {
                },
                
              })
-           
-          } else {
-            console.log('it doesnot exists')
-          }
+             
           
-        
-        // console.log('image url: ', imageURLs)
         }
         )
        }
        else {
-       if(RNFetchBlob.fs.isDir(image.path)){
+        
+       
          console.log('it exists here too')
         images.push(image)
         imageURLs.push({
@@ -302,23 +383,24 @@ class UnCatagorised extends Component {
           
         })
        
-       
        }
-       else{
-         console.log('it doesnot exists here too')
-       }
-         
-       }
-     
-    })
-
-    this.state.selectedPhotoUri.map(item=> {
-      console.log('item+++', item)
-        this.state.sharePhotoUrl.push(item.uri)
-        console.log(this.state.sharePhotoUrl)
+      
     })
 
     
+   
+
+   
+
+let sharePhotoUrl=[]
+
+    this.state.selectedPhotoUri.map(item=> {
+      
+     
+     sharePhotoUrl.push(item.uri)
+        
+    })
+
 
 
     return (
@@ -358,10 +440,11 @@ class UnCatagorised extends Component {
                       <TouchableOpacity activeOpacity={0.8} 
                       onPress={()=>{  
                          Share.open({
-                          urls: this.state.sharePhotoUrl,
+                          urls: sharePhotoUrl,
                           subject: "Share Link" //  for email
                          });
                          console.log('sharing...')
+                         console.log(sharePhotoUrl)
                          }} 
                       style={{alignItems:'center', justifyContent:'center', padding:10,marginLeft:5}}>
                       <FontAwesome style={{}} name="share-alt" size={26} color="#fff"  />
@@ -401,10 +484,10 @@ class UnCatagorised extends Component {
               <TouchableOpacity
               
               activeOpacity={0.85} onPress={this.state.showPhotos ? ()=> {
-                this.setState({showPhotos: false})
+                this.setState({showPhotos: false, changeState:876})
               } : ()=> {
                
-                this.setState({showPhotos:true})
+                this.setState({showPhotos:true, changeState:166})
               }} 
               style={{flexDirection:'row', justifyContent:'space-between', paddingHorizontal:20, backgroundColor:'#f5f5f5', padding:4, alignItems:'center'}}
               >
@@ -431,14 +514,9 @@ class UnCatagorised extends Component {
                   marginHorizontal:(WIDTH-((WIDTH/3.1)*3))/2, width:WIDTH }}>
                  
                    <View style={{alignItems:'center', justifyContent:'flex-start',margin:'auto', flexDirection:'row', flexWrap:'wrap', width:WIDTH,}}>
+                  
                     {imageURLs.map((image, index) =>{
-                   
-                   
-                  //let imagePath ={uri: image.source.uri.split("DATE:").shift()}
-                  //console.log(imagePath)
-                  console.log('-----------------')
-                      console.log('selected',this.state.selectedPhotoUri)
-
+                
                       function objectPropInArray(list, prop, val) {
                         if (list.length > 0 ) {
                           for (i in list) {
@@ -449,10 +527,11 @@ class UnCatagorised extends Component {
                         }
                         return false;  
                       }
+                    
 
                       const randomNum = (Math.floor(Math.random() * 1000) + index).toString()
                     if(objectPropInArray(this.state.selectedPhotoUri, 'key', image.source.key)){
-                      console.log('=======================',this.state.selectedPhotoUri)
+                    
                         return (
                           <TouchableOpacity
                           activeOpacity={0.9}
@@ -462,9 +541,9 @@ class UnCatagorised extends Component {
                           // let index = this.state.selectedPhotoUri.indexOf(image.source.key);
                            if(objectPropInArray(this.state.selectedPhotoUri, 'key', image.source.key)){
                             let filtered = this.state.selectedPhotoUri.filter(function(el) { return el.key != image.source.key; });
-                            console.log('filtered==', filtered)
+                           // console.log('filtered==', filtered)
                             this.setState({selectedPhotoUri: filtered ,changeState:100})
-                            console.log('deleted uri==', this.state.selectedPhotoUri)
+                            //console.log('deleted uri==', this.state.selectedPhotoUri)
                             if(this.state.selectedPhotoUri.length <=0){
                                this.setState({onLongPressOnPhoto:false})
                               this.setState({changeState:120})
@@ -490,9 +569,11 @@ class UnCatagorised extends Component {
                         </TouchableOpacity>
                         )
                        
-                    } else {
-                      console.log('state===',this.state.selectedPhotoUri)
-                      console.log('3333333333333333')
+                    } 
+                    
+                    
+                    else {
+                   
                       return (
                         <TouchableOpacity
                         activeOpacity={0.9}
@@ -500,7 +581,7 @@ class UnCatagorised extends Component {
                         onPress={() => {
                           if(this.state.onLongPressOnPhoto){
                             let filtered = this.state.selectedPhotoUri.filter(function(el) { return el.key != image.source.key; });
-                            console.log('filtered==', filtered)
+                            //console.log('filtered==', filtered)
                            //let index = this.state.selectedPhotoUri.indexOf(image.source.key);
                            if(objectPropInArray(this.state.selectedPhotoUri, 'key', image.source)){
                             //this.state.selectedPhotoUri.splice(index, 1);
@@ -517,7 +598,7 @@ class UnCatagorised extends Component {
                            
                                 this.state.selectedPhotoUri.push(image.source)
                                  this.setState({changeState:15})   
-                                console.log('selected +++++++uris ==', this.state.selectedPhotoUri)
+                               // console.log('selected +++++++uris ==', this.state.selectedPhotoUri)
                               }  
                           } 
                          else {
@@ -529,14 +610,14 @@ class UnCatagorised extends Component {
                               changeState:4
                           })}
                             }}
-                         delayLongPress={100}
+                         //delayLongPress={100}
                          
                         onLongPress={()=> 
                         {
                           this.setState({onLongPressOnPhoto:true}, ()=> {
                             this.state.selectedPhotoUri.push(image.source)
                             this.setState({changeState:19870})
-                            console.log('state selected uris ==', this.state)
+                            //console.log('state selected uris ==', this.state)
                            
                           })
                           this.setState({changeState:1000})
@@ -594,14 +675,14 @@ class UnCatagorised extends Component {
 
               </View>
               <View style={{ alignItems:'center', width:WIDTH,}}>
-                <Text  style={{color:'#000',marginHorizontal:10, padding:2,fontSize:12,fontFamily:'Quicksand-Medium'}}>NOTE: NotesMate only stores the location of the files or images, so if you delete the files or images from your device, these will be deleted from here too!</Text>
+                <Text  style={{color:'#000',marginHorizontal:10, padding:2,fontSize:12,fontFamily:'Quicksand-Regular'}}>NOTE: NotesMate only stores the location of the files or images, so if you delete the files or images from your device, these will be deleted from here too!</Text>
               </View>
               {/*************************************************************************************************************************************************************************************************************************************************document*******************************************************************************************************************************************/}
               <View style={{marginTop:20}}>
               <TouchableOpacity activeOpacity={0.85} onPress={this.state.showDocument ? ()=> {
-                this.setState({showDocument: false})
+                this.setState({showDocument: false, changeState:89})
               } : ()=> {
-                this.setState({showDocument:true})
+                this.setState({showDocument:true, changeState:76})
               }} 
               style={{flexDirection:'row', justifyContent:'space-between', paddingHorizontal:20, backgroundColor:'#f5f5f5', padding:4}}
               >
@@ -722,7 +803,7 @@ const styles = StyleSheet.create({
 });
 
 
-export default connect(mapStateToProps,{addnotestoUncatagorised, addPdftoUncatagorised, deletepdfFromUncatagorised, deletenotesFromUncatagorised, setAdTimeForAddPdftoUncatagorised, setAdTimeForAddNotestoUncatagorised})(UnCatagorised)
+export default connect(mapStateToProps,{addnotestoUncatagorised, addPdftoUncatagorised, deletepdfFromUncatagorised, deletenotesFromUncatagorised, setAdTimeForAddPdftoUncatagorised, setAdTimeForAddNotestoUncatagorised,deleteNoUrlNotesFromUncatagorised, removeLoading})(UnCatagorised)
 
 
 // return (

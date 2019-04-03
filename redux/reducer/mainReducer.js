@@ -26,7 +26,8 @@ import { ADD_SUBJECT,
         EDIT_CHAPTER_AD_EXPIRATION,
         DELETE_NOTES_FROMUNCATAGORISED_IN_SUBJECT_AD_EXPIRATION,
         REMOVE_LOADING,
-        
+        CHANGE_THEME_TO_DARK,
+        CHANGE_THEME_TO_LIGHT
 
     } from '../action/types'
 //import console = require('console');
@@ -43,7 +44,8 @@ const initialState={
     AddNotestoUncatagorisedAdExpiraion: null,
     AddPdftoUncatagorisedAdExpiraion: null,
     AddNotestoUncatagorisedInSubjectAdExpiraion: null,
-    DeleteNotesfromUncatagorisedinSubjectAdExpiraion: null
+    DeleteNotesfromUncatagorisedinSubjectAdExpiraion: null,
+    darkTheme:false
 
 
 }
@@ -61,6 +63,18 @@ export default function(state= initialState, action){
                 ...state,
                 loading:false
             }
+
+        case CHANGE_THEME_TO_DARK:
+            return{
+                ...state,
+                darkTheme:true
+            }
+        case CHANGE_THEME_TO_LIGHT:
+            return{
+                ...state,
+                darkTheme:false
+            }
+
             //ADD
         case ADD_SUBJECT:
             return{
@@ -124,8 +138,7 @@ export default function(state= initialState, action){
 
 
             case ADD_PDF_TO_UNCATAGORISED_IN_CHAPTER:
-            console.log('--------------------------------')
-            console.log(action.payload)
+            
             return {
                 ...state,
                 singleSubject: {
@@ -303,12 +316,7 @@ export default function(state= initialState, action){
             }
         case DELETE_PDF_FROM_UNCATAGORISED:
                 payload_data = action.payload;
-                        console.log('pdf delting.......................................', action.payload)
-            //     let myPDFArray = state.uncatagorised_documents.filter( el=> {
-            //         console.log(el)
-            //         el.fileKey !== action.payload;
-            //    } )
-            //    console.log(myPDFArray)
+                       
             return{
                 ...state,
                 uncatagorised_documents:  state.uncatagorised_documents.filter(item=> item.fileKey !== action.payload),
@@ -333,7 +341,7 @@ export default function(state= initialState, action){
                       
                     return payload_data.indexOf( filePath_date ) < 0;
                   } );
-                  console.log('myArray======', myArray)
+                  //console.log('myArray======', myArray)
                   
             return{
                 ...state,

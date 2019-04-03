@@ -73,7 +73,7 @@ class ChapterScreen extends Component {
                   this.props.deletenotesinChapter(imageTobeDeleted,this.props.auth.singleSubject.subject_name, this.props.auth.singleChapter.chapter_name,)
                  
                 } else {
-                  console.log('image exists')
+                  //console.log('image exists')
                
                  
                 }
@@ -94,7 +94,7 @@ class ChapterScreen extends Component {
                   this.props.deletenotesinChapter(imageTobeDeleted,this.props.auth.singleSubject.subject_name, this.props.auth.singleChapter.chapter_name,)
                  
                 } else {
-                  console.log('image exists here too')
+                 // console.log('image exists here too')
                
                  
                 }
@@ -121,7 +121,7 @@ class ChapterScreen extends Component {
                 this.props.deletepdfinChapter(item.fileKey,this.props.auth.singleSubject.subject_name, this.props.auth.singleChapter.chapter_name)
                
               } else {
-                console.log('files that exists.......................')
+                //console.log('files that exists.......................')
                
               }
             })  
@@ -141,19 +141,7 @@ class ChapterScreen extends Component {
           })
         });
       }
-      // launchCamera(){
-      //   ImagePicker.openCamera({
-      //     width: 300,
-      //     height: 400,
-       
-      //   }).then(images => {
-      //     this.setState({photos_in_chapter: images}, ()=> {
-      //       this.props.addnotesinChapter(this.state.photos_in_chapter,this.state.subject_name, this.state.chapter_name)
-            
-           
-      //     })
-      //   });
-      // }
+    
       selectpdf() {
         //Opening Document Picker
         DocumentPicker.show(
@@ -163,6 +151,7 @@ class ChapterScreen extends Component {
           (error, res) => {
             try {
               RNFetchBlob.fs.stat(res.uri).then(stats=> {
+                ToastAndroid.show('Importing...', ToastAndroid.SHORT)
                 this.setState({
                   documents_in_chapter:{
                     fileUri: 'file://'+ stats.path,
@@ -227,21 +216,39 @@ class ChapterScreen extends Component {
 
       _renderPDF=(item, index)=> {
       
+        let bgColor;
+        let textColor;
+        let cardColor;
+        let deleteColor;
+        let importColor;
+        if(this.props.auth.darkTheme){
+            bgColor='#303030',
+            textColor='#fff',
+            cardColor='#424242',
+            deleteColor='#fff',
+            importColor='#fff'
+        } else {
+            bgColor='#fff',
+            textColor='#000',
+            cardColor='#fff',
+            deleteColor='#f70000',
+            importColor='#0073ff'
+        }
 
        
                  return (
-            <TouchableOpacity activeOpacity={0.9}  onPress={()=> {this.setState({showPDF:true, pdfUri:{uri: item.fileUri}}) }} style={{marginTop:10, marginHorizontal:10, backgroundColor:'#fff', padding:6, flexDirection:'row',justifyContent:'space-between', alignItems:'center', width:WIDTH-20, borderRadius:8,marginBottom:4, elevation:4}}>
-                      <View style={{justifyContent:'space-between',flexDirection:'row', alignItems:'center',}}>
-  
-                                      
-                    <View style={{alignItems:'center', flexDirection:'row',padding:0, margin:0,  justifyContent:'flex-start', width:77+'%', overflow:'hidden'}}>
+            <TouchableOpacity activeOpacity={0.9}  onPress={()=> {this.setState({showPDF:true, pdfUri:{uri: item.fileUri}}) }}style={{marginTop:10, backgroundColor:cardColor, flexDirection:'row',justifyContent:'space-between', alignItems:'center', borderRadius:8,marginBottom:4, elevation:4,padding:4,  marginHorizontal:5, paddingHorizontal:0}}>     
+
+                    <View style={{alignItems:'center',padding:0, margin:0,flexDirection:'row',  justifyContent:'flex-start', width:77+'%', overflow:'hidden'}}>
                       <Icon name="file-pdf" style={{padding:7}} size={26} color="#ff0000"/>
                       <View style={{marginLeft:2,justifyContent:'flex-start', width: 85+'%'}}>
-                      <Text numberOfLines={1} style={{fontFamily:'Quicksand-Medium',padding:7, fontSize:14, color:'#000'}}>{item.fileName}</Text>
+                      <Text numberOfLines={1} style={{fontFamily:'Quicksand-Medium',padding:7, fontSize:14, color:textColor}}>{item.fileName}</Text>
                       
                       </View> 
                        </View>
-                      <View style={{alignItems:'center', flexDirection:'row',marginRight:5,}}>
+                      
+  
+                    <View style={{alignItems:'center', flexDirection:'row',}}>
                       <TouchableOpacity
                       activeOpacity={0.9}
                       onPress={()=>{
@@ -255,18 +262,16 @@ class ChapterScreen extends Component {
                         })
                         
                       }}
-                      style={{backgroundColor:'#fff', elevation:5, borderRadius:100, alignItems:'center', justifyContent:'center',marginRight:5}}>
-                      <FontAwesome name="share-alt" color="#0073ff" style={{padding:7}} size={22}/>
+                      style={{backgroundColor:cardColor, elevation:5, borderRadius:100, alignItems:'center', justifyContent:'center',marginRight:5}}>
+                      <FontAwesome name="share-alt" color={importColor} style={{padding:7}} size={22}/>
                       </TouchableOpacity>
                         <TouchableOpacity
                         onPress={()=> this.deletepdf(item.fileKey)}
-                        style={{backgroundColor:'#fff', elevation:5, borderRadius:100, alignItems:'center', justifyContent:'center'}}>
-                        <Icon name="trash-alt" color="#ff0000" style={{padding:7}} size={20}/>
+                        style={{backgroundColor:cardColor, elevation:5, borderRadius:100, alignItems:'center', justifyContent:'center'}}>
+                        <Icon name="trash-alt" color={deleteColor} style={{padding:7}} size={20}/>
   
                         </TouchableOpacity>
                       </View>
-  
-                    </View>
   
                         
   
@@ -278,7 +283,29 @@ class ChapterScreen extends Component {
 
   render() {
 
-   
+
+    let bgColor;
+    let textColor;
+    let cardColor;
+    let deleteColor;
+    let importColor;
+    let light_cardColor
+    if(this.props.auth.darkTheme){
+        bgColor='#303030',
+        textColor='#fff',
+        cardColor='#424242',
+        deleteColor='#fff',
+        importColor='#fff',
+        light_cardColor='#424242'
+    } else {
+        bgColor='#fff',
+        textColor='#000',
+        cardColor='#fff',
+        deleteColor='#f70000',
+        importColor='#0073ff',
+        light_cardColor='#f5f5f5'
+    }
+    
     
     const images = [];
     const imageURLs=[];
@@ -293,7 +320,7 @@ class ChapterScreen extends Component {
       
         return image.map(image=> {
 
-            console.log('it exists')
+           // console.log('it exists')
             images.push(image)
             imageURLs.push({
                source:{
@@ -310,7 +337,7 @@ class ChapterScreen extends Component {
        else {
         
        
-         console.log('it exists here too')
+       //  console.log('it exists here too')
         images.push(image)
         imageURLs.push({
          source:{
@@ -327,8 +354,6 @@ class ChapterScreen extends Component {
 
     this.state.selectedPhotoUri.map(item=> {
       
-      console.log('item+++', item)
-      console.log(sharePhotoUrl)
      sharePhotoUrl.push(item.uri)
         
     })
@@ -336,7 +361,7 @@ class ChapterScreen extends Component {
     
 
     return (
-      <View style={{flex:1}}> 
+      <View style={{flex:1, backgroundColor:bgColor}}> 
 
       {/*********************************HEADER*********************************** */}
         <View style={{backgroundColor:'transparent',flexDirection: 'row', borderBottomLeftRadius:15, borderBottomRightRadius:15,overflow:'hidden', flex:1}}>
@@ -394,24 +419,30 @@ class ChapterScreen extends Component {
 
       {/********************************MAIN BODY************************************* */}
 
-          <View style={{flex:10, backgroundColor:'#fff'}}>
+          <View style={{flex:10, backgroundColor:bgColor}}>
                 <ScrollView >
-                <View style={{alignItems:'center', justifyContent:'space-between', elevation:6,width:WIDTH, flexDirection:'row', borderBottomWidth:1, borderBottomColor:'#f2f2f2', backgroundColor:'#fff'}}>
-                <View style={{alignItems:'center', justifyContent:'flex-start',flexDirection:'row', width:77+'%',}}>
+                <View style={{alignItems:'center', justifyContent:'space-between', elevation:6,width:WIDTH, flexDirection:'row', borderBottomWidth:1, borderBottomColor:bgColor, backgroundColor:bgColor}}>
+                <View style={{alignItems:'center', justifyContent:'flex-start',flexDirection:'row', width:85+'%',}}>
+              
 
-                <TouchableOpacity activeOpacity={0.99} onPress={()=> this.props.navigation.goBack()} style={{alignItems:'center', justifyContent:'center', padding:10,marginLeft:10,}}>
-                <FontAwesome style={{}} name="angle-left" size={26} color="#000" />
+                <TouchableOpacity activeOpacity={0.99} onPress={()=> this.props.navigation.goBack()} style={{alignItems:'center', justifyContent:'center', padding:10,marginLeft:0,}}>
+                <FontAwesome style={{}} name="angle-left" size={26} color={textColor} />
                 </TouchableOpacity>
-                <View style={{alignItems:'center',justifyContent:'center', padding:10,}}>
-                  <Text numberOfLines={1} style={{fontSize:18,marginLeft:5, fontFamily:'Quicksand-Medium',textAlign:'center' ,color:'#000',}}>{this.state.subject_name} > {this.props.auth.singleChapter.chapter_name}</Text>
+                <View style={{alignItems:'center',justifyContent:'flex-end',  maxWidth:40+'%'}}>
+                <Text numberOfLines={1} style={{fontSize:18,marginLeft:5,fontFamily:'Quicksand-Medium',textAlign:'justify' ,color:textColor,}}>{this.state.subject_name} </Text>
                 </View>
-
+                <View style={{alignItems:'center',paddingLeft:0,textAlign:'left', maxWidth:45+'%', }}>
+                  <Text numberOfLines={1}  style={{fontSize:18,marginLeft:0,fontFamily:'Quicksand-Medium',color:textColor,textAlign:'auto'}}>> {this.props.auth.singleChapter.chapter_name}</Text>
+                </View>
+               
                 </View>
 
                 <TouchableOpacity activeOpacity={0.99} onPress={()=> {this.setState({isEditChapterModalVisible:true})}}
-                 style={{alignItems:'center', justifyContent:'center', padding:10,marginLeft:20,}}>
-                <FontAwesome style={{}} name="edit" size={26} color="#0073ff" />
+                 style={{alignItems:'center', justifyContent:'center', padding:10}}>
+                <FontAwesome style={{}} name="edit" size={26} color={importColor} />
                 </TouchableOpacity>
+
+                
                
                 
               </View>
@@ -431,15 +462,15 @@ class ChapterScreen extends Component {
                
                 this.setState({showPhotos:true})
               }} 
-              style={{flexDirection:'row', justifyContent:'space-between', paddingHorizontal:20, backgroundColor:'#f5f5f5', padding:4, alignItems:'center'}}
+              style={{flexDirection:'row', justifyContent:'space-between', paddingHorizontal:20, backgroundColor:light_cardColor, padding:4, alignItems:'center'}}
               >
-              <Text style={{fontFamily:'Quicksand-Bold', fontSize:16, color:'#000',}}>Photos</Text>
+              <Text style={{fontFamily:'Quicksand-Bold', fontSize:16, color:textColor,}}>Photos</Text>
               <View style={{flexDirection:'row', alignItems:'center'}}>
-                <TouchableOpacity  onPress={()=> this.selectphoto()} style={{borderRadius:20, borderColor:'#0073ff', borderWidth:2, marginRight:10}}>
-                <Text style={{fontFamily:'Quicksand-Medium', fontSize:12, color:'#0073ff',paddingHorizontal:5}}>Import</Text>
+                <TouchableOpacity  onPress={()=> this.selectphoto()} style={{borderRadius:20, borderColor:importColor, borderWidth:2, marginRight:10}}>
+                <Text style={{fontFamily:'Quicksand-Medium', fontSize:12, color:importColor,paddingHorizontal:5}}>Import</Text>
 
                 </TouchableOpacity>
-              <FontAwesome name={this.state.showPhotos? "angle-down" : "angle-right"} size={22} color="#000" />
+              <FontAwesome name={this.state.showPhotos? "angle-down" : "angle-right"} size={22} color={textColor} />
 
               </View>
               </TouchableOpacity>
@@ -453,16 +484,16 @@ class ChapterScreen extends Component {
                   </View>
                 ) :( 
                   <View style={{margin:'auto',alignItems:'center', justifyContent:'center',
-                  marginHorizontal:(WIDTH-((WIDTH/3.1)*3))/2, width:WIDTH }}>
+                  marginHorizontal:(WIDTH-((WIDTH/3.1)*3))/2, width:WIDTH, backgroundColor:bgColor }}>
                  
-                   <View style={{alignItems:'center', justifyContent:'flex-start',margin:'auto', flexDirection:'row', flexWrap:'wrap', width:WIDTH,}}>
+                   <View style={{alignItems:'center', justifyContent:'flex-start',margin:'auto', flexDirection:'row', flexWrap:'wrap', width:WIDTH,backgroundColor:bgColor}}>
                    {imageURLs.map((image, index) =>{
                    
                    
                    //let imagePath ={uri: image.source.uri.split("DATE:").shift()}
                    //console.log(imagePath)
-                   console.log('-----------------')
-                       console.log('selected',this.state.selectedPhotoUri)
+                  //  console.log('-----------------')
+                  //      console.log('selected',this.state.selectedPhotoUri)
  
                        function objectPropInArray(list, prop, val) {
                          if (list.length > 0 ) {
@@ -477,7 +508,7 @@ class ChapterScreen extends Component {
                        const randomNum = (Math.floor(Math.random() * 1000) + index).toString()
  
                      if(objectPropInArray(this.state.selectedPhotoUri, 'key', image.source.key)){
-                       console.log('=======================',this.state.selectedPhotoUri)
+                      // console.log('=======================',this.state.selectedPhotoUri)
                          return (
                            <TouchableOpacity
                            activeOpacity={0.9}
@@ -487,9 +518,9 @@ class ChapterScreen extends Component {
                            // let index = this.state.selectedPhotoUri.indexOf(image.source.key);
                             if(objectPropInArray(this.state.selectedPhotoUri, 'key', image.source.key)){
                              let filtered = this.state.selectedPhotoUri.filter(function(el) { return el.key != image.source.key; });
-                             console.log('filtered==', filtered)
+                             //console.log('filtered==', filtered)
                              this.setState({selectedPhotoUri: filtered ,changeState:100})
-                             console.log('deleted uri==', this.state.selectedPhotoUri)
+                             //console.log('deleted uri==', this.state.selectedPhotoUri)
                              if(this.state.selectedPhotoUri.length <=0){
                                 this.setState({onLongPressOnPhoto:false})
                                this.setState({changeState:120})
@@ -524,7 +555,7 @@ class ChapterScreen extends Component {
                          onPress={() => {
                            if(this.state.onLongPressOnPhoto){
                              let filtered = this.state.selectedPhotoUri.filter(function(el) { return el.key != image.source.key; });
-                             console.log('filtered==', filtered)
+                            // console.log('filtered==', filtered)
                             //let index = this.state.selectedPhotoUri.indexOf(image.source.key);
                             if(objectPropInArray(this.state.selectedPhotoUri, 'key', image.source)){
                              //this.state.selectedPhotoUri.splice(index, 1);
@@ -541,7 +572,7 @@ class ChapterScreen extends Component {
                             
                                  this.state.selectedPhotoUri.push(image.source)
                                   this.setState({changeState:15})   
-                                 console.log('selected +++++++uris ==', this.state.selectedPhotoUri)
+                                // console.log('selected +++++++uris ==', this.state.selectedPhotoUri)
                                }  
                            } 
                           else {
@@ -560,7 +591,7 @@ class ChapterScreen extends Component {
                            this.setState({onLongPressOnPhoto:true}, ()=> {
                              this.state.selectedPhotoUri.push(image.source)
                              this.setState({changeState:19870})
-                             console.log('state selected uris ==', this.state)
+                            // console.log('state selected uris ==', this.state)
                             
                            })
                            this.setState({changeState:1000})
@@ -601,14 +632,7 @@ class ChapterScreen extends Component {
                           </LinearGradient>
                                           
                       </TouchableOpacity>
-                      {/* <TouchableOpacity activeOpacity={0.8} 
-                        onPress={()=> this.launchCamera()}
-                        style={{marginTop:10, marginBottom:10,margin:'auto',alignItems:'center', justifyContent:'center',padding:3, alignSelf:'center',paddingHorizontal:20}}>
-                        <LinearGradient colors={['#00aaff', '#0073ff']} style={{borderRadius:11, width:100+'%'}}  start={{x: 0.2, y: 0.2}} end={{x: 0.6, y: 0.6}} >
-                        <Text style={{color:'#fff',paddingHorizontal:20, padding:6,fontSize:14,textAlign:'center', fontFamily:'Quicksand-Medium'}}>Launch Camera</Text>
-                        </LinearGradient>
-                                        
-                    </TouchableOpacity> */}
+                    
                   </View>
                   
                 ):(
@@ -617,7 +641,7 @@ class ChapterScreen extends Component {
               }
               </View>
               <View style={{ alignItems:'center', width:WIDTH,}}>
-                <Text  style={{color:'#000',marginHorizontal:10, padding:2,fontSize:12,fontFamily:'Quicksand-Regular'}}>NOTE: NotesMate only stores the location of the files or images, so if you delete the files or images from your device, these will be deleted from here too!</Text>
+                <Text  style={{color:textColor,marginHorizontal:10, padding:2,fontSize:12,fontFamily:'Quicksand-Regular'}}>NOTE: NotesMate only stores the location of the files or images, so if you delete the files or images from your device, these will be deleted from here too!</Text>
               </View>
 
                {/*************************************************************************************************************************************************************************************************************************************************document*******************************************************************************************************************************************/}
@@ -627,17 +651,17 @@ class ChapterScreen extends Component {
               } : ()=> {
                 this.setState({showDocument:true})
               }} 
-              style={{flexDirection:'row', justifyContent:'space-between', paddingHorizontal:20, backgroundColor:'#f5f5f5', padding:4}}
+              style={{flexDirection:'row', justifyContent:'space-between', paddingHorizontal:20, backgroundColor:light_cardColor, padding:4}}
               >
-              <Text style={{fontFamily:'Quicksand-Bold', fontSize:16, color:'#000',}}>Documents</Text>
+              <Text style={{fontFamily:'Quicksand-Bold', fontSize:16, color:textColor,}}>Documents</Text>
               <View style={{flexDirection:'row', alignItems:'center'}}>
                 <TouchableOpacity
                 onPress={()=> this.selectpdf()}
-                style={{borderRadius:20, borderColor:'#0073ff', borderWidth:2, marginRight:10}}>
-                <Text style={{fontFamily:'Quicksand-Medium', fontSize:12, color:'#0073ff',paddingHorizontal:5}}>Import</Text>
+                style={{borderRadius:20, borderColor:importColor, borderWidth:2, marginRight:10}}>
+                <Text style={{fontFamily:'Quicksand-Medium', fontSize:12, color:importColor,paddingHorizontal:5}}>Import</Text>
 
                 </TouchableOpacity>
-              <FontAwesome name={this.state.showDocument? "angle-down" : "angle-right"} size={22} color="#000" />
+              <FontAwesome name={this.state.showDocument? "angle-down" : "angle-right"} size={22} color={textColor} />
 
               </View>
 
@@ -713,9 +737,9 @@ class ChapterScreen extends Component {
           animationInTiming={200}
           onBackButtonPress={()=> this.setState({isEditChapterModalVisible:false})}
         >
-        <View style={{backgroundColor:'#fff', width:WIDTH-50,alignSelf:'center',borderRadius:20, overflow:'hidden'}}>
+        <View style={{backgroundColor:cardColor, width:WIDTH-50,alignSelf:'center',borderRadius:20, overflow:'hidden'}}>
                 <View style={{backgroundColor:'#0073ff', height:50, alignItems:'center', justifyContent:'center'}}>
-                <Text style={{fontSize:18, fontFamily:'Quicksand-Medium',color:'#fff'}} >Edit Chapter/Catagory name</Text>
+                <Text style={{fontSize:18, fontFamily:'Quicksand-Medium',color:'#fff'}} >Edit Chapter/Category name</Text>
                 </View>
                 <View style={{marginTop:30, paddingHorizontal:10}}>
                 <TextInput 
@@ -725,7 +749,7 @@ class ChapterScreen extends Component {
                         value={this.state.chapter_name}
                         editable={true}
                         onChangeText={(text)=> this.setState({chapter_name:text})}
-                        style={{fontFamily:'Quicksand-Medium', fontSize:14, color:'#333'}}
+                        style={{fontFamily:'Quicksand-Medium', fontSize:14, color:textColor}}
                          />
                 </View>
                 <View style={{ flexDirection:'row', marginBottom:20,marginTop:30, justifyContent:'space-around'}}>

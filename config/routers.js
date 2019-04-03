@@ -7,6 +7,11 @@ import UnCatagorised from '../Components1/UnCatagorised'
 import ChapterScreen from '../Components1/ChapterScreen'
 import SubScreen from '../Components1/SubScreen'
 
+import Setting from '../Component2/Setting'
+import HelpScreen from '../Component2/Help'
+
+
+
 
 
 export const MainStack = createStackNavigator(
@@ -23,7 +28,14 @@ export const MainStack = createStackNavigator(
  },
   SubScreen:{
     screen:SubScreen
+  },
+  Setting:{
+    screen: Setting
+  }, 
+  HelpScreen:{
+    screen: HelpScreen
   }
+
   
   
 }

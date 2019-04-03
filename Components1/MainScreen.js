@@ -62,9 +62,26 @@ class MainScreen extends Component {
       
   
       _renderItem=(item, index)=> {
+
+        let bgColor;
+        let textColor;
+        let cardColor;
+        let deleteColor;
+        if(this.props.auth.darkTheme){
+            bgColor='#303030',
+            textColor='#fff',
+            cardColor='#424242',
+            deleteColor='#fff'
+        } else {
+            bgColor='#fff',
+            textColor='#000',
+            cardColor='#fff',
+            deleteColor='#f70000'
+        }
+    
         
         //console.log('item is ', item)
-        const colors = ['#8e44ad', '#3498db','#fff200', '#2c3e50', '#6c5ce7', '#0073ff', '#26de81'];
+        const colors = ['#8e44ad', '#3498db','#fff200', '#6c5ce7', '#0073ff', '#26de81'];
         let string = item.subject_name;
 
        let First_char= string.charAt(0).toUpperCase(); 
@@ -74,21 +91,20 @@ class MainScreen extends Component {
 
 
             this.props.navigation.navigate('SubScreen')
-            }} style={{marginTop:20, marginHorizontal:10,height:HEIGHT/11, backgroundColor:'#fff',paddingHorizontal:10, padding:4, justifyContent:'space-between', flexDirection:'row',alignItems:'center', borderRadius:10, elevation:4}}>
+            }} style={{marginTop:12, marginHorizontal:10,height:HEIGHT/11, backgroundColor:cardColor,paddingHorizontal:10, padding:4, justifyContent:'space-between', flexDirection:'row',alignItems:'center', borderRadius:10, elevation:4}}>
 
                   <View style={{flexDirection:'row', alignItems:'center', justifyContent:'flex-start'}}>
-                  <View style={{backgroundColor: colors[Math.floor(Math.random() * colors.length)], borderRadius:((HEIGHT/11)-(HEIGHT/11)/2)/2, alignItems:'center',overflow:'hidden', justifyContent:'center',height: (HEIGHT/11)-(HEIGHT/11)/2,
-                   width: (HEIGHT/11)-(HEIGHT/11)/2 }}>
+                  <View style={{backgroundColor: colors[Math.floor(Math.random() * colors.length)], borderRadius:((HEIGHT/11)-(HEIGHT/11)/2)/2, alignItems:'center',overflow:'hidden', justifyContent:'center',height: (HEIGHT/11)-(HEIGHT/11)/2, width: (HEIGHT/11)-(HEIGHT/11)/2, borderWidth:2, borderColor:'#fff' }}>
                     <Text style={{fontSize:22, color:'#fff',fontFamily:'Quicksand-Bold', }}>{First_char}</Text>
                   </View>
-                  <Text numberOfLines={2} style={{fontFamily:'Quicksand-Medium', marginRight:10, width:80+'%', fontSize:16, color:'#000',padding:4, marginLeft:10}}>{item.subject_name}</Text>
+                  <Text numberOfLines={2} style={{fontFamily:'Quicksand-Medium', marginRight:10, width:80+'%', fontSize:16, color:textColor,padding:4, marginLeft:10}}>{item.subject_name}</Text>
                   </View>
                   <TouchableOpacity
-                  style={{padding:4,marginRight:5}}
+                  style={{padding:4,}}
                   onPress={()=> {
                     
                     this.deletebutton(item.subject_name)}}>
-                  <Icon name="trash-alt" size={20} color="#f70000" />
+                  <Icon name="trash-alt" size={20} color={deleteColor} />
                   </TouchableOpacity>
 
                       
@@ -111,38 +127,62 @@ class MainScreen extends Component {
     const subjectNames = subjects.map(subject=> {
       return subject.subject_name
     })
-    // console.log(subjects)
-    // console.log(subjectNames)
-   
-
+    let bgColor;
+        let textColor;
+        let cardColor;
+        let deleteColor;
+        let importColor;
+        let light_cardColor
+        if(this.props.auth.darkTheme){
+            bgColor='#303030',
+            textColor='#fff',
+            cardColor='#424242',
+            deleteColor='#fff',
+            importColor='#fff',
+            light_cardColor='#424242'
+        } else {
+            bgColor='#fff',
+            textColor='#000',
+            cardColor='#fff',
+            deleteColor='#f70000',
+            importColor='#0073ff',
+            light_cardColor='#f5f5f5'
+        }
 
     return (
-      <View style={{flex:1}}> 
+      <View style={{flex:1, backgroundColor:bgColor}}> 
       
         <View style={{backgroundColor:'transparent',flexDirection: 'row', borderBottomLeftRadius:15, borderBottomRightRadius:15,overflow:'hidden', flex:1}}>
          <LinearGradient  colors={['#00c6ff', '#0073ff']} style={{width: 100 + '%', height: 100 +'%',}}  start={{x: 0.1, y: 0.1}} end={{x: 0.5, y: 0.5}} >
-           <View style={{flexDirection:'row', alignItems:'center',width: 100 + '%', height: 100 +'%',justifyContent:'center', paddingHorizontal:20}}>
-          
-           <View> 
+           <View style={{flexDirection:'row', alignItems:'center',width: 100 + '%', height: 100 +'%',justifyContent:'space-evenly', paddingHorizontal:20}}>
+          <View style={{width: 20+'%', alignItems:'center', justifyContent:'center',  }}>
+
+          </View>
+           <View style={{width: 60+'%', alignItems:'center', justifyContent:'center',}}> 
            <Text numberOfLines={1} style={{fontSize:24,fontFamily:'Quicksand-Bold', textAlign:'center' ,color:'#fff',}}>NotesMate</Text>
            </View>
-         
+         <View style={{width: 20+'%', alignItems:'flex-end',justifyContent:'center'}}>
+          <TouchableOpacity activeOpacity={0.9} onPress={()=> this.props.navigation.navigate('Setting')}>
+             <FontAwesome name="cog" size={26} color="#fff" />
+          </TouchableOpacity>
+             
+         </View>
                
            </View>
           
  
          </LinearGradient> 
          </View>
-          <View style={{flex:10, backgroundColor:'#fff'}}>
+          <View style={{flex:10, backgroundColor:bgColor}}>
                 <ScrollView >
                     <View style={{marginTop:20}}>
-                        <View style={{ paddingHorizontal:20, backgroundColor:'#f5f5f5', padding:4}}>
-                            <Text style={{fontFamily:'Quicksand-Bold', fontSize:18, color:'#000',}}>Subjects/Catagory :</Text>
+                        <View style={{ paddingHorizontal:20, backgroundColor:light_cardColor, padding:4}}>
+                            <Text style={{fontFamily:'Quicksand-Bold', fontSize:18, color:textColor,}}>Subjects/Category :</Text>
                         </View>
                         {
                           this.props.auth.subjects.length <=0  ? (
                             <View style={{alignItems:'center',marginTop:10, justifyContent:'center'}}>
-                            <Text style={{fontFamily:'Quicksand-Regular', fontSize:14, color:'#333',}}>No subject added yet!</Text>
+                            <Text style={{fontFamily:'Quicksand-Regular', fontSize:14, color:textColor,}}>No subject added yet!</Text>
                             
                             <TouchableOpacity activeOpacity={0.8} 
                             onPress={()=> this.setState({isSubjectModalVisible:true})}
@@ -181,9 +221,9 @@ class MainScreen extends Component {
                    
                     <TouchableOpacity activeOpacity={0.88} onPress={()=> {
                      // this.props.setLoading()
-                      this.props.navigation.navigate('UnCatagorised')}} style={{marginTop:20, paddingHorizontal:20, backgroundColor:'#f5f5f5', padding:4, justifyContent:'space-between', flexDirection:'row'}}>
-                        <Text style={{fontFamily:'Quicksand-Bold', fontSize:18, color:'#000',}}>Uncatagorised </Text>
-                        <FontAwesome name="angle-right" size={23} color="#000"/>
+                      this.props.navigation.navigate('UnCatagorised')}} style={{marginTop:20, paddingHorizontal:20, backgroundColor:light_cardColor, padding:4, justifyContent:'space-between', flexDirection:'row'}}>
+                        <Text style={{fontFamily:'Quicksand-Bold', fontSize:18, color:textColor,}}>Uncategorized </Text>
+                        <FontAwesome name="angle-right" size={23} color={textColor}/>
                     </TouchableOpacity>
                     
                 </ScrollView>
@@ -195,9 +235,9 @@ class MainScreen extends Component {
           animationInTiming={200}
           onBackButtonPress={()=> this.setState({isSubjectModalVisible:false})}
         >
-        <View style={{backgroundColor:'#fff', width:WIDTH-50,alignSelf:'center',borderRadius:20, overflow:'hidden'}}>
+        <View style={{backgroundColor:cardColor, width:WIDTH-50,alignSelf:'center',borderRadius:20, overflow:'hidden'}}>
                 <View style={{backgroundColor:'#0073ff', height:50, alignItems:'center', justifyContent:'center'}}>
-                <Text style={{fontSize:18, fontFamily:'Quicksand-Medium', color:'#fff'}} >Add Subject/Catagory</Text>
+                <Text style={{fontSize:18, fontFamily:'Quicksand-Medium', color:'#fff'}} >Add Subject/Category</Text>
                 </View>
                 <View style={{marginTop:30, paddingHorizontal:10}}>
                 <TextInput 
@@ -207,7 +247,7 @@ class MainScreen extends Component {
                         value={this.state.subject_name}
                         editable={true}
                         onChangeText={(text)=> this.setState({subject_name:text})}
-                        style={{fontFamily:'Quicksand-Medium', fontSize:14, color:'#333'}}
+                        style={{fontFamily:'Quicksand-Medium', fontSize:14, color:textColor}}
                          />
                 </View>
                 <View style={{ flexDirection:'row', marginBottom:20,marginTop:30, justifyContent:'space-around'}}>

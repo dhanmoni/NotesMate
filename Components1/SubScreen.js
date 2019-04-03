@@ -72,7 +72,7 @@ class SubScreen extends Component {
                   this.props.deletenotestoUncatagorisedinChapter(imageTobeDeleted, this.props.auth.singleSubject.subject_name)
                  
                 } else {
-                  console.log('image exists')
+                 // console.log('image exists')
                
                  
                 }
@@ -93,7 +93,7 @@ class SubScreen extends Component {
                   this.props.deletenotestoUncatagorisedinChapter(imageTobeDeleted, this.props.auth.singleSubject.subject_name)
                  
                 } else {
-                  console.log('image exists here too')
+                 // console.log('image exists here too')
                
                  
                 }
@@ -119,7 +119,7 @@ class SubScreen extends Component {
               
               } else {
               
-                console.log('here')
+               // console.log('here')
               }
             })  
           }
@@ -133,6 +133,7 @@ class SubScreen extends Component {
         ImagePicker.openPicker({
           multiple: true
         }).then(images => {
+          
           this.setState({uncatagorised_photos_in_chapter: images}, ()=> {
             this.props.addnotestoUncatagorisedinChapter(this.state.uncatagorised_photos_in_chapter, this.state.subject_name)
             let expirationDate = this.props.auth.AddNotestoUncatagorisedInSubjectAdExpiraion;
@@ -154,32 +155,7 @@ class SubScreen extends Component {
           })
         });
       }
-      // launchCamera(){
-      //   ImagePicker.openCamera({
-      //     width: 300,
-      //     height: 400,
-       
-      //   }).then(images => {
-      //     this.setState({uncatagorised_photos_in_chapter: images}, ()=> {
-      //       this.props.addnotestoUncatagorisedinChapter(this.state.uncatagorised_photos_in_chapter, this.state.subject_name)
-      //       let expirationDate = this.props.auth.AddNotestoUncatagorisedInSubjectAdExpiraion;
-      //       let date = new Date(expirationDate)
-      //       if(!date || new Date() > date){
-        
-      //       myDate = new Date(
-      //           new Date().getTime() + (5*60*1000)
-      //       )
-      //         this.props.setAdTimeForAddNotestoUncatagorisedInSubject(myDate)
-      //       InterstitialAdManager.showAd('324550781538284_324678218192207')
-      //       .then(didClick => {console.log('clicked')})
-      //       .catch(error => {console.log('err', error)});
-          
-      //       } 
-            
-           
-      //     })
-      //   });
-      // }
+      
       selectpdf() {
         //Opening Document Picker
         DocumentPicker.show(
@@ -187,6 +163,7 @@ class SubScreen extends Component {
             filetype: [DocumentPickerUtil.pdf()],
           },
           (error, res) => {
+            ToastAndroid.show('Importing...', ToastAndroid.SHORT)
             try {
               RNFetchBlob.fs.stat(res.uri).then(stats=> {
 
@@ -234,8 +211,28 @@ class SubScreen extends Component {
         
       
       _renderItem=(item, index)=> {
+
+        let bgColor;
+        let textColor;
+        let cardColor;
+        let deleteColor;
+        let importColor;
+        if(this.props.auth.darkTheme){
+            bgColor='#303030',
+            textColor='#fff',
+            cardColor='#424242',
+            deleteColor='#fff',
+            importColor='#fff'
+        } else {
+            bgColor='#fff',
+            textColor='#000',
+            cardColor='#fff',
+            deleteColor='#f70000',
+            importColor='#0073ff'
+        }
+    
        // console.log('item is ', item)
-        const colors = ['#8e44ad', '#fff200', '#2c3e50', '#6c5ce7', '#0073ff', '#26de81'];
+        const colors = ['#8e44ad', '#fff200',  '#6c5ce7', '#0073ff', '#26de81'];
         let string = item.chapter_name;
 
        let First_char= string.charAt(0).toUpperCase();     
@@ -246,19 +243,18 @@ class SubScreen extends Component {
            
            this.props.getSingleChapter(item)
             this.props.navigation.navigate('ChapterScreen')
-            }} style={{marginTop:12, marginHorizontal:10,height:HEIGHT/11, backgroundColor:'#fff',paddingHorizontal:10, padding:4, justifyContent:'space-between', flexDirection:'row',alignItems:'center', borderRadius:10, elevation:4}}>
+            }} style={{marginTop:12, marginHorizontal:10,height:HEIGHT/11, backgroundColor:cardColor,paddingHorizontal:10, padding:4, justifyContent:'space-between', flexDirection:'row',alignItems:'center', borderRadius:10, elevation:4}}>
                   <View style={{flexDirection:'row', alignItems:'center', justifyContent:'flex-start'}}>
-                  <View style={{backgroundColor: colors[Math.floor(Math.random() * colors.length)], borderRadius:((HEIGHT/11)-(HEIGHT/11)/2)/2, alignItems:'center',overflow:'hidden', justifyContent:'center',height: (HEIGHT/11)-(HEIGHT/11)/2,
-                   width: (HEIGHT/11)-(HEIGHT/11)/2 }}>
+                  <View style={{backgroundColor: colors[Math.floor(Math.random() * colors.length)], borderRadius:((HEIGHT/11)-(HEIGHT/11)/2)/2, alignItems:'center',overflow:'hidden', justifyContent:'center',height: (HEIGHT/11)-(HEIGHT/11)/2,borderWidth:2, borderColor:'#fff',width: (HEIGHT/11)-(HEIGHT/11)/2 }}>
                     <Text style={{fontSize:22,textAlign:'center', color:'#fff',fontFamily:'Quicksand-Bold',}}>{First_char}</Text>
                   </View>
-                  <Text numberOfLines={2}  style={{fontFamily:'Quicksand-Medium',marginRight:10,width:80+'%', fontSize:16, color:'#000',padding:4, marginLeft:10}}>{item.chapter_name}</Text>
+                  <Text numberOfLines={2}  style={{fontFamily:'Quicksand-Medium',marginRight:10,width:80+'%', fontSize:16, color:textColor,padding:4, marginLeft:10}}>{item.chapter_name}</Text>
                   </View>
                 <TouchableOpacity
                  onPress={()=> this.deleteChapter(item)}
                  style={{padding:4,}}
                 >
-                <Icon name="trash-alt" size={20} color="#f70000"/>
+                <Icon name="trash-alt" size={20} color={deleteColor}/>
                 </TouchableOpacity>
 
                    
@@ -316,26 +312,47 @@ class SubScreen extends Component {
       _renderPDF=(item, index)=> {
 
         
-
+        let bgColor;
+        let textColor;
+        let cardColor;
+        let deleteColor;
+        let importColor;
+        if(this.props.auth.darkTheme){
+            bgColor='#303030',
+            textColor='#fff',
+            cardColor='#424242',
+            deleteColor='#fff',
+            importColor='#fff'
+        } else {
+            bgColor='#fff',
+            textColor='#000',
+            cardColor='#fff',
+            deleteColor='#f70000',
+            importColor='#0073ff'
+        }
+    
+    
         
           return (
-            <TouchableOpacity activeOpacity={0.9}  onPress={()=> {this.setState({showPDF:true, pdfUri:{uri: item.fileUri}}) }} style={{marginTop:10, marginHorizontal:10, backgroundColor:'#fff', padding:6, flexDirection:'row',justifyContent:'space-between', alignItems:'center', width:WIDTH-20, borderRadius:8,marginBottom:4, elevation:4}}>
-                       <View style={{justifyContent:'space-between',flexDirection:'row', alignItems:'center',}}>
-  
-                    
+            <TouchableOpacity activeOpacity={0.9}  onPress={()=> {this.setState({showPDF:true, pdfUri:{uri: item.fileUri}}) }}
+            
+            style={{marginTop:10, backgroundColor:cardColor, flexDirection:'row',justifyContent:'space-between', alignItems:'center', borderRadius:8,marginBottom:4, elevation:4,padding:4,  marginHorizontal:5, paddingHorizontal:0}}>
+
                       <View style={{alignItems:'center', flexDirection:'row',padding:0, margin:0,  justifyContent:'flex-start', width:77+'%', overflow:'hidden'}}>
                         <Icon name="file-pdf" style={{padding:7}} size={26} color="#ff0000"/>
                         <View style={{marginLeft:2,justifyContent:'flex-start', width: 85+'%'}}>
-                        <Text numberOfLines={1} style={{fontFamily:'Quicksand-Medium',padding:7, fontSize:14, color:'#000'}}>{item.fileName}</Text>
+                        <Text numberOfLines={1} style={{fontFamily:'Quicksand-Medium',padding:7, fontSize:14, color:textColor}}>{item.fileName}</Text>
                         
                         </View>
                         </View>
-                        <View style={{alignItems:'center', flexDirection:'row',marginRight:5, }}>
+                        
+  
+                      
+                      <View style={{alignItems:'center', flexDirection:'row', }}>
                         <TouchableOpacity
                         activeOpacity={0.9}
                         onPress={()=>{
-                          console.log('file uri==')
-                          console.log(item)
+                         
                           this.setState({fileToShare:item.fileUri}, ()=> {
                             Share.open({
                               url: this.state.fileToShare,
@@ -344,18 +361,16 @@ class SubScreen extends Component {
                           })
                           
                         }}
-                        style={{backgroundColor:'#fff', elevation:5, borderRadius:100, alignItems:'center', justifyContent:'center',marginRight:5}}>
-                        <FontAwesome name="share-alt" color="#0073ff" style={{padding:7}} size={22}/>
+                        style={{backgroundColor:cardColor, elevation:5, borderRadius:100, alignItems:'center', justifyContent:'center',marginRight:5}}>
+                        <FontAwesome name="share-alt" color={importColor} style={{padding:7}} size={22}/>
                         </TouchableOpacity>
                           <TouchableOpacity
                           onPress={()=> this.deletepdf(item.fileKey)}
-                          style={{backgroundColor:'#fff', elevation:5, borderRadius:100, alignItems:'center', justifyContent:'center'}}>
-                          <Icon name="trash-alt" color="#ff0000" style={{padding:7}} size={20}/>
+                          style={{backgroundColor:cardColor, elevation:5, borderRadius:100, alignItems:'center', justifyContent:'center'}}>
+                          <Icon name="trash-alt" color={deleteColor} style={{padding:7}} size={20}/>
   
                           </TouchableOpacity>
                         </View>
-  
-                      </View>
                                             
   
                         
@@ -369,6 +384,29 @@ class SubScreen extends Component {
 
   render() {
 
+    let bgColor;
+    let textColor;
+    let cardColor;
+    let deleteColor;
+    let importColor;
+    let light_cardColor
+    if(this.props.auth.darkTheme){
+        bgColor='#303030',
+        textColor='#fff',
+        cardColor='#424242',
+        deleteColor='#fff',
+        importColor='#fff',
+        light_cardColor='#424242'
+    } else {
+        bgColor='#fff',
+        textColor='#000',
+        cardColor='#fff',
+        deleteColor='#f70000',
+        importColor='#0073ff',
+        light_cardColor='#f5f5f5'
+    }
+    
+    
    
     
     
@@ -382,7 +420,7 @@ class SubScreen extends Component {
       
         return image.map(image=> {
 
-          console.log('it exists')
+         // console.log('it exists')
           images.push(image)
           imageURLs.push({
              source:{
@@ -397,7 +435,7 @@ class SubScreen extends Component {
       )
        }
        else {
-        console.log('it exists here too')
+       // console.log('it exists here too')
         images.push(image)
         imageURLs.push({
          source:{
@@ -413,8 +451,7 @@ class SubScreen extends Component {
 
     this.state.selectedPhotoUri.map(item=> {
       
-      console.log('item+++', item)
-      console.log(sharePhotoUrl)
+      
      sharePhotoUrl.push(item.uri)
         
     })
@@ -427,7 +464,7 @@ class SubScreen extends Component {
     
 
     return (
-      <View style={{flex:1}}> 
+      <View style={{flex:1, backgroundColor:bgColor}}> 
 
       {/*********************************HEADER*********************************** */}
         <View style={{backgroundColor:'transparent',flexDirection: 'row', borderBottomLeftRadius:15, borderBottomRightRadius:15,overflow:'hidden', flex:1}}>
@@ -485,38 +522,38 @@ class SubScreen extends Component {
 
       {/********************************MAIN BODY************************************* */}
 
-          <View style={{flex:10, backgroundColor:'#fff'}}>
+          <View style={{flex:10, backgroundColor:bgColor}}>
                 <ScrollView >
-                <View style={{alignItems:'center', justifyContent:'space-between', elevation:6,width:WIDTH, flexDirection:'row', borderBottomWidth:1, borderBottomColor:'#f2f2f2', backgroundColor:'#fff'}}>
+                <View style={{alignItems:'center', justifyContent:'space-between', elevation:6,width:WIDTH, flexDirection:'row', borderBottomWidth:1, borderBottomColor:bgColor, backgroundColor:bgColor}}>
                 <View style={{alignItems:'center', justifyContent:'flex-start',flexDirection:'row', width:77+'%',}}>
 
                 <TouchableOpacity activeOpacity={0.99} 
                 onPress={()=>  this.props.navigation.goBack() } 
-                style={{alignItems:'center', justifyContent:'center', padding:10,marginLeft:10,}}>
-                <FontAwesome style={{}} name="angle-left" size={26} color="#000" />
+                style={{alignItems:'center', justifyContent:'center', padding:10,}}>
+                <FontAwesome style={{}} name="angle-left" size={26} color={textColor} />
                 </TouchableOpacity>
                 <View style={{alignItems:'center',justifyContent:'center', padding:10,}}>
-                  <Text numberOfLines={1} style={{fontSize:18,marginLeft:5, fontFamily:'Quicksand-Medium',textAlign:'center' ,color:'#000',}}>{this.props.auth.singleSubject.subject_name}</Text>
+                  <Text numberOfLines={1} style={{fontSize:18, fontFamily:'Quicksand-Medium',textAlign:'center' ,color:textColor,}}>{this.props.auth.singleSubject.subject_name}</Text>
                 </View>
 
                 </View>
 
                 <TouchableOpacity activeOpacity={0.99} onPress={()=> {this.setState({isEditSubjectModalVisible:true})}}
-                 style={{alignItems:'center', justifyContent:'center', padding:10,marginLeft:20,}}>
-                <FontAwesome style={{}} name="edit" size={26} color="#0073ff" />
+                 style={{alignItems:'center', justifyContent:'center', padding:10,}}>
+                <FontAwesome style={{}} name="edit" size={26} color={importColor} />
                 </TouchableOpacity>
                
                 
               </View>
               <View style={{marginTop:20}}>
-              <View style={{ paddingHorizontal:20, backgroundColor:'#f5f5f5', padding:4}}>
-                            <Text style={{fontFamily:'Quicksand-Bold', fontSize:16, color:'#000',}}>Chapter/Catagory :</Text>
+              <View style={{ paddingHorizontal:20, backgroundColor:light_cardColor, padding:4}}>
+                            <Text style={{fontFamily:'Quicksand-Bold', fontSize:16, color:textColor,}}>Chapter/Category :</Text>
                         </View>
 
               {
                           this.props.auth.singleSubject.chapter <=0  ? (
                             <View style={{alignItems:'center',marginTop:10, justifyContent:'center'}}>
-                            <Text style={{fontFamily:'Quicksand-Regular', fontSize:14, color:'#333',}}>No chapter added yet!</Text>
+                            <Text style={{fontFamily:'Quicksand-Regular', fontSize:14, color:textColor,}}>No chapter added yet!</Text>
                             
                             <TouchableOpacity activeOpacity={0.8} 
                             onPress={()=> this.setState({isChapterModalVisible:true})}
@@ -551,8 +588,8 @@ class SubScreen extends Component {
                           )
                         }
                   <View style={{marginTop:10, }}>
-                       <View style={{ paddingHorizontal:20,backgroundColor:'#f5f5f5', padding:4}}>
-                            <Text style={{fontFamily:'Quicksand-Bold', fontSize:16, color:'#000',}}>Uncatagorised :</Text>
+                       <View style={{ paddingHorizontal:20,backgroundColor:light_cardColor, padding:4}}>
+                            <Text style={{fontFamily:'Quicksand-Bold', fontSize:16, color:textColor,}}>Uncategorized :</Text>
                       </View>
                      
                      
@@ -566,15 +603,15 @@ class SubScreen extends Component {
                
                 this.setState({showPhotos:true})
               }} 
-              style={{flexDirection:'row', justifyContent:'space-between', paddingHorizontal:20, backgroundColor:'#f5f5f5', padding:4, alignItems:'center'}}
+              style={{flexDirection:'row', justifyContent:'space-between', paddingHorizontal:20, backgroundColor:light_cardColor, padding:4, alignItems:'center'}}
               >
-              <Text style={{fontFamily:'Quicksand-Bold', fontSize:14, color:'#000',}}>Photos</Text>
+              <Text style={{fontFamily:'Quicksand-Bold', fontSize:14, color:textColor,}}>Photos</Text>
               <View style={{flexDirection:'row', alignItems:'center'}}>
-                <TouchableOpacity  onPress={()=> this.selectphoto()} style={{borderRadius:20, borderColor:'#0073ff', borderWidth:2, marginRight:10}}>
-                <Text style={{fontFamily:'Quicksand-Medium', fontSize:12, color:'#0073ff',paddingHorizontal:5}}>Import</Text>
+                <TouchableOpacity  onPress={()=> this.selectphoto()} style={{borderRadius:20, borderColor:importColor, borderWidth:2, marginRight:10}}>
+                <Text style={{fontFamily:'Quicksand-Medium', fontSize:12, color:importColor,paddingHorizontal:5}}>Import</Text>
 
                 </TouchableOpacity>
-              <FontAwesome name={this.state.showPhotos? "angle-down" : "angle-right"} size={22} color="#000" />
+              <FontAwesome name={this.state.showPhotos? "angle-down" : "angle-right"} size={22} color={textColor} />
 
               </View>
               </TouchableOpacity>
@@ -588,16 +625,16 @@ class SubScreen extends Component {
                   </View>
                 ) :( 
                   <View style={{margin:'auto',alignItems:'center', justifyContent:'center',
-                  marginHorizontal:(WIDTH-((WIDTH/3.1)*3))/2, width:WIDTH }}>
+                  marginHorizontal:(WIDTH-((WIDTH/3.1)*3))/2, width:WIDTH , backgroundColor:bgColor}}>
                  
-                   <View style={{alignItems:'center', justifyContent:'flex-start',margin:'auto', flexDirection:'row', flexWrap:'wrap', width:WIDTH,}}>
+                   <View style={{alignItems:'center', justifyContent:'flex-start',margin:'auto', flexDirection:'row', flexWrap:'wrap', width:WIDTH,backgroundColor:bgColor}}>
                    {imageURLs.map((image, index) =>{
                    
                    
                    //let imagePath ={uri: image.source.uri.split("DATE:").shift()}
                    //console.log(imagePath)
-                   console.log('-----------------')
-                       console.log('selected',this.state.selectedPhotoUri)
+                  //  console.log('-----------------')
+                  //      console.log('selected',this.state.selectedPhotoUri)
  
                        function objectPropInArray(list, prop, val) {
                          if (list.length > 0 ) {
@@ -613,7 +650,7 @@ class SubScreen extends Component {
                        const randomNum = (Math.floor(Math.random() * 1000) + index).toString()
  
                      if(objectPropInArray(this.state.selectedPhotoUri, 'key', image.source.key)){
-                       console.log('=======================',this.state.selectedPhotoUri)
+                       //console.log('=======================',this.state.selectedPhotoUri)
                          return (
                            <TouchableOpacity
                            activeOpacity={0.9}
@@ -623,9 +660,9 @@ class SubScreen extends Component {
                            // let index = this.state.selectedPhotoUri.indexOf(image.source.key);
                             if(objectPropInArray(this.state.selectedPhotoUri, 'key', image.source.key)){
                              let filtered = this.state.selectedPhotoUri.filter(function(el) { return el.key != image.source.key; });
-                             console.log('filtered==', filtered)
+                            // console.log('filtered==', filtered)
                              this.setState({selectedPhotoUri: filtered ,changeState:100})
-                             console.log('deleted uri==', this.state.selectedPhotoUri)
+                             //console.log('deleted uri==', this.state.selectedPhotoUri)
                              if(this.state.selectedPhotoUri.length <=0){
                                 this.setState({onLongPressOnPhoto:false})
                                this.setState({changeState:120})
@@ -652,8 +689,8 @@ class SubScreen extends Component {
                          )
                         
                      } else {
-                       console.log('state===',this.state.selectedPhotoUri)
-                       console.log('3333333333333333')
+                      //  console.log('state===',this.state.selectedPhotoUri)
+                      //  console.log('3333333333333333')
                        return (
                          <TouchableOpacity
                          activeOpacity={0.9}
@@ -661,7 +698,7 @@ class SubScreen extends Component {
                          onPress={() => {
                            if(this.state.onLongPressOnPhoto){
                              let filtered = this.state.selectedPhotoUri.filter(function(el) { return el.key != image.source.key; });
-                             console.log('filtered==', filtered)
+                            // console.log('filtered==', filtered)
                             //let index = this.state.selectedPhotoUri.indexOf(image.source.key);
                             if(objectPropInArray(this.state.selectedPhotoUri, 'key', image.source)){
                              //this.state.selectedPhotoUri.splice(index, 1);
@@ -678,7 +715,7 @@ class SubScreen extends Component {
                             
                                  this.state.selectedPhotoUri.push(image.source)
                                   this.setState({changeState:15})   
-                                 console.log('selected +++++++uris ==', this.state.selectedPhotoUri)
+                                 //console.log('selected +++++++uris ==', this.state.selectedPhotoUri)
                                }  
                            } 
                           else {
@@ -697,7 +734,7 @@ class SubScreen extends Component {
                            this.setState({onLongPressOnPhoto:true}, ()=> {
                              this.state.selectedPhotoUri.push(image.source)
                              this.setState({changeState:19870})
-                             console.log('state selected uris ==', this.state)
+                             //console.log('state selected uris ==', this.state)
                             
                            })
                            this.setState({changeState:1000})
@@ -738,16 +775,9 @@ class SubScreen extends Component {
                           </LinearGradient>
                                           
                       </TouchableOpacity>
-                      {/* <TouchableOpacity activeOpacity={0.8} 
-                        onPress={()=> this.launchCamera()}
-                        style={{marginTop:10, marginBottom:10,margin:'auto',alignItems:'center', justifyContent:'center',padding:3, alignSelf:'center',paddingHorizontal:20}}>
-                        <LinearGradient colors={['#00aaff', '#0073ff']} style={{borderRadius:11, width:100+'%'}}  start={{x: 0.2, y: 0.2}} end={{x: 0.6, y: 0.6}} >
-                        <Text style={{color:'#fff',paddingHorizontal:20, padding:6,fontSize:14,textAlign:'center', fontFamily:'Quicksand-Medium'}}>Launch Camera</Text>
-                        </LinearGradient>
-                                        
-                    </TouchableOpacity> */}
+                  
                      <View style={{ alignItems:'center', width:WIDTH,}}>
-                  <Text  style={{color:'#000',marginHorizontal:10, padding:2,fontSize:12,fontFamily:'Quicksand-Regular'}}>NOTE: NotesMate only stores the location of the files or images, so if you delete the files or images from your device, these will be deleted from here too!</Text>
+                  <Text  style={{color:textColor,marginHorizontal:10, padding:2,fontSize:12,fontFamily:'Quicksand-Regular'}}>NOTE: NotesMate only stores the location of the files or images, so if you delete the files or images from your device, these will be deleted from here too!</Text>
                 </View>
 
                   </View>
@@ -765,17 +795,17 @@ class SubScreen extends Component {
               } : ()=> {
                 this.setState({showDocument:true})
               }} 
-              style={{flexDirection:'row', justifyContent:'space-between', paddingHorizontal:20, backgroundColor:'#f5f5f5', padding:4}}
+              style={{flexDirection:'row', justifyContent:'space-between', paddingHorizontal:20, backgroundColor:light_cardColor, padding:4}}
               >
-              <Text style={{fontFamily:'Quicksand-Bold', fontSize:14, color:'#000',}}>Documents</Text>
+              <Text style={{fontFamily:'Quicksand-Bold', fontSize:14, color:textColor,}}>Documents</Text>
               <View style={{flexDirection:'row', alignItems:'center'}}>
                 <TouchableOpacity
                 onPress={()=> this.selectpdf()}
-                style={{borderRadius:20, borderColor:'#0073ff', borderWidth:2, marginRight:10}}>
-                <Text style={{fontFamily:'Quicksand-Medium', fontSize:12, color:'#0073ff',paddingHorizontal:5}}>Import</Text>
+                style={{borderRadius:20, borderColor:importColor, borderWidth:2, marginRight:10}}>
+                <Text style={{fontFamily:'Quicksand-Medium', fontSize:12, color:importColor,paddingHorizontal:5}}>Import</Text>
 
                 </TouchableOpacity>
-              <FontAwesome name={this.state.showDocument? "angle-down" : "angle-right"} size={22} color="#000" />
+              <FontAwesome name={this.state.showDocument? "angle-down" : "angle-right"} size={22} color={textColor} />
 
               </View>
 
@@ -851,9 +881,9 @@ class SubScreen extends Component {
           animationInTiming={200}
           onBackButtonPress={()=> this.setState({isChapterModalVisible:false})}
         >
-        <View style={{backgroundColor:'#fff', width:WIDTH-50,alignSelf:'center',borderRadius:20, overflow:'hidden'}}>
+        <View style={{backgroundColor:cardColor, width:WIDTH-50,alignSelf:'center',borderRadius:20, overflow:'hidden'}}>
                 <View style={{backgroundColor:'#0073ff', height:50, alignItems:'center', justifyContent:'center'}}>
-                <Text style={{fontSize:18, fontFamily:'Quicksand-Medium', color:'#fff'}} >Add Chapter/Catagory</Text>
+                <Text style={{fontSize:18, fontFamily:'Quicksand-Medium', color:'#fff'}} >Add Chapter/Category</Text>
                 </View>
                 <View style={{marginTop:30, paddingHorizontal:10}}>
                 <TextInput 
@@ -863,7 +893,7 @@ class SubScreen extends Component {
                         value={this.state.chapter_name}
                         editable={true}
                         onChangeText={(text)=> this.setState({chapter_name:text})}
-                        style={{fontFamily:'Quicksand-Medium', fontSize:14, color:'#333'}}
+                        style={{fontFamily:'Quicksand-Medium', fontSize:14, color:textColor}}
                          />
                 </View>
                 <View style={{ flexDirection:'row', marginBottom:20,marginTop:30, justifyContent:'space-around'}}>
@@ -890,9 +920,9 @@ class SubScreen extends Component {
           animationInTiming={200}
           onBackButtonPress={()=> this.setState({isEditSubjectModalVisible:false})}
         >
-        <View style={{backgroundColor:'#fff', width:WIDTH-50,alignSelf:'center',borderRadius:20, overflow:'hidden'}}>
+        <View style={{backgroundColor:cardColor, width:WIDTH-50,alignSelf:'center',borderRadius:20, overflow:'hidden'}}>
                 <View style={{backgroundColor:'#0073ff', height:50, alignItems:'center', justifyContent:'center'}}>
-                <Text style={{fontSize:18, fontFamily:'Quicksand-Medium',color:'#fff'}} >Edit Subject/Catagory name</Text>
+                <Text style={{fontSize:18, fontFamily:'Quicksand-Medium',color:'#fff'}} >Edit Subject/Category name</Text>
                 </View>
                 <View style={{marginTop:30, paddingHorizontal:10}}>
                 <TextInput 
@@ -902,7 +932,7 @@ class SubScreen extends Component {
                         value={this.state.subject_name}
                         editable={true}
                         onChangeText={(text)=> this.setState({subject_name:text})}
-                        style={{fontFamily:'Quicksand-Medium', fontSize:14, color:'#333'}}
+                        style={{fontFamily:'Quicksand-Medium', fontSize:14, color:textColor}}
                          />
                 </View>
                 <View style={{ flexDirection:'row', marginBottom:20,marginTop:30, justifyContent:'space-around'}}>

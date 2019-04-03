@@ -56,12 +56,11 @@ class UnCatagorised extends Component {
           avoidEmptySpaceAroundImage:false
          // includeBase64:true
         }).then(images => {
-          // console.log('========++++++++++++++++++++++++++++++++=======')
-          // console.log(images)
-          // console.log('5555555555555555555555555555555555')
-          // const localImageUrl =  URL.createObjectURL(images[0].data);
-          // console.log(localImageUrl)
+          console.log('--------------------')
+         console.log(images)
           this.setState({photos: images}, ()=> {
+            console.log('+++++++++++++++++++++++++++++=')
+            console.log(this.state.photos)
             this.props.addnotestoUncatagorised(this.state.photos)
             let expirationDate = this.props.auth.AddNotestoUncatagorisedAdExpiraion;
             let date = new Date(expirationDate)
@@ -82,39 +81,10 @@ class UnCatagorised extends Component {
           })
         });
       }
-      // launchCamera(){
-      //   ImagePicker.openCamera({
-      //     width: 300,
-      //     height: 400,
-       
-      //   }).then(images => {
-      //     this.setState({photos: images}, ()=> {
-      //      // console.log('image===', images)
-      //       this.props.addnotestoUncatagorised(this.state.photos)
-      //       let expirationDate = this.props.auth.AddNotestoUncatagorisedAdExpiraion;
-      //       //console.log('exp===', expirationDate)
-      //       //console.log(new Date())
-      //       let date = new Date(expirationDate)
-      //       //console.log('date==', date)
-      //       if(!date || new Date() > date){
-      //        // console.log('setting time', expirationDate)
-      //       date = new Date(
-      //           new Date().getTime() + (4*60*1000)
-      //       )
-      //         this.props.setAdTimeForAddNotestoUncatagorised(date)
-      //       InterstitialAdManager.showAd('324550781538284_324673918192637')
-      //       .then(didClick => {console.log('clicked')})
-      //       .catch(error => {console.log('err', error)});
-      //       // console.log(date)
-      //       // console.log('=======')
-            
-      //       }
-            
-      //     })
-      //   });
-      // }
+     
       selectpdf() {
         //Opening Document Picker
+        
         DocumentPicker.show(
           {
             filetype: [DocumentPickerUtil.pdf()],
@@ -124,7 +94,7 @@ class UnCatagorised extends Component {
             try {
               RNFetchBlob.fs.stat(res.uri)
               .then((stats) => {
-               
+                ToastAndroid.show('Importing...', ToastAndroid.SHORT)
               this.setState({
                 pdf:{
                   fileUri: 'file://'+ stats.path,
@@ -157,13 +127,6 @@ class UnCatagorised extends Component {
               })
               .catch((err) => {console.log(err)})
               
-             
-       
-              // console.log('res : ' + JSON.stringify(res));
-              // console.log('URI : ' + res.uri);
-              // console.log('Type : ' + res.type);
-              // console.log('File Name : ' + res.fileName);
-              // console.log('File Size : ' + res.fileSize);
             } catch (error) {
               ToastAndroid.show('Nothing imported!', ToastAndroid.SHORT)
               console.log(error)
@@ -230,7 +193,7 @@ class UnCatagorised extends Component {
                       this.props.deletenotesFromUncatagorised(imageTobeDeleted)
                      
                     } else {
-                      console.log('image exists')
+                      //console.log('image exists')
                    
                      
                     }
@@ -251,7 +214,7 @@ class UnCatagorised extends Component {
                       this.props.deletenotesFromUncatagorised(imageTobeDeleted)
                      
                     } else {
-                      console.log('image exists here too')
+                      //console.log('image exists here too')
                    
                      
                     }
@@ -271,7 +234,7 @@ class UnCatagorised extends Component {
                     this.props.deletepdfFromUncatagorised(item.fileKey)
                    
                   } else {
-                    console.log('file exists')
+                   // console.log('file exists')
                  
                    
                   }
@@ -285,23 +248,44 @@ class UnCatagorised extends Component {
       
       _renderPDF=(item, index)=> {
         
-        
+        let bgColor;
+        let textColor;
+        let cardColor;
+        let deleteColor;
+        let importColor;
+        if(this.props.auth.darkTheme){
+            bgColor='#303030',
+            textColor='#fff',
+            cardColor='#424242',
+            deleteColor='#fff',
+            importColor='#fff'
+        } else {
+            bgColor='#fff',
+            textColor='#000',
+            cardColor='#fff',
+            deleteColor='#f70000',
+            importColor='#0073ff'
+        }
+    
 
-        console.log('the pdf exists')
+       // console.log('the pdf exists')
         
         return (
-          <TouchableOpacity activeOpacity={0.9}  onPress={()=> {this.setState({showPDF:true, pdfUri:{uri: item.fileUri}}) }} style={{marginTop:10, backgroundColor:'#fff', padding:6, flexDirection:'row',justifyContent:'flex-start', alignItems:'center',width:WIDTH-20, borderRadius:8,marginBottom:4, elevation:4}}>
-                <View style={{justifyContent:'space-between',flexDirection:'row', alignItems:'center',}}>
-
+          <TouchableOpacity activeOpacity={0.9}  onPress={()=> {this.setState({showPDF:true, pdfUri:{uri: item.fileUri}}) }} style={{marginTop:10, backgroundColor:cardColor, flexDirection:'row',justifyContent:'space-between', alignItems:'center', borderRadius:8,marginBottom:4,padding:4, elevation:4, marginHorizontal:5, paddingHorizontal:0}}>
+               
                   
                    <View style={{alignItems:'center', flexDirection:'row',padding:0, margin:0,  justifyContent:'flex-start', width:77+'%', overflow:'hidden',}}>
                      <Icon name="file-pdf" style={{padding:7}} size={26} color="#ff0000"/>
                       <View style={{marginLeft:2,justifyContent:'flex-start', width: 85+'%'}}>
-                      <Text numberOfLines={1} style={{fontFamily:'Quicksand-Medium',padding:7, fontSize:14, color:'#000'}}>{item.fileName}</Text>
+                      <Text numberOfLines={1} style={{fontFamily:'Quicksand-Medium',padding:7, fontSize:14, color:textColor}}>{item.fileName}</Text>
                       
                       </View>
                      </View>
-                     <View style={{alignItems:'center', flexDirection:'row',marginRight:5}}>
+                    
+
+                
+
+                <View style={{alignItems:'center', flexDirection:'row',}}>
                      <TouchableOpacity
                      activeOpacity={0.9}
                       onPress={()=>{
@@ -315,19 +299,16 @@ class UnCatagorised extends Component {
                         })
                        
                       }}
-                     style={{backgroundColor:'#fff', elevation:5, borderRadius:100, alignItems:'center', justifyContent:'center',marginRight:5}}>
-                     <FontAwesome name="share-alt" color="#0073ff" style={{padding:7}} size={22}/>
+                     style={{backgroundColor:cardColor, elevation:5, borderRadius:100, alignItems:'center', justifyContent:'center',marginRight:5, }}>
+                     <FontAwesome name="share-alt" color={importColor} style={{padding:7}} size={22}/>
                      </TouchableOpacity>
                        <TouchableOpacity
                        onPress={()=> this.deletepdf(item.fileKey)}
-                       style={{backgroundColor:'#fff', elevation:5, borderRadius:100, alignItems:'center', justifyContent:'center'}}>
-                       <Icon name="trash-alt" color="#ff0000" style={{padding:7}} size={20}/>
+                       style={{backgroundColor:cardColor, elevation:5, borderRadius:100, alignItems:'center', justifyContent:'center',  }}>
+                       <Icon name="trash-alt" color={deleteColor} style={{padding:7}} size={20}/>
 
                        </TouchableOpacity>
                      </View>
-
-                </View>
-
                             
 
                       
@@ -338,6 +319,29 @@ class UnCatagorised extends Component {
 
   render() {
 
+
+        let bgColor;
+        let textColor;
+        let cardColor;
+        let deleteColor;
+        let importColor;
+        let light_cardColor
+        if(this.props.auth.darkTheme){
+            bgColor='#303030',
+            textColor='#fff',
+            cardColor='#424242',
+            deleteColor='#fff',
+            importColor='#fff',
+            light_cardColor='#424242'
+        } else {
+            bgColor='#fff',
+            textColor='#000',
+            cardColor='#fff',
+            deleteColor='#f70000',
+            importColor='#0073ff',
+            light_cardColor='#f5f5f5'
+        }
+    
     
     
     
@@ -356,7 +360,7 @@ class UnCatagorised extends Component {
       
         return image.map(image=> {
 
-            console.log('it exists')
+            //console.log('it exists')
             images.push(image)
             imageURLs.push({
                source:{
@@ -373,7 +377,7 @@ class UnCatagorised extends Component {
        else {
         
        
-         console.log('it exists here too')
+        // console.log('it exists here too')
         images.push(image)
         imageURLs.push({
          source:{
@@ -404,7 +408,7 @@ let sharePhotoUrl=[]
 
 
     return (
-      <View style={{flex:1}}> 
+      <View style={{flex:1, backgroundColor:bgColor}}> 
         <View style={{backgroundColor:'transparent',flexDirection: 'row', borderBottomLeftRadius:15, borderBottomRightRadius:15,overflow:'hidden', flex:1}}>
          <LinearGradient  colors={['#00c6ff', '#0073ff']} style={{width: 100 + '%', height: 100 +'%',}}  start={{x: 0.1, y: 0.1}} end={{x: 0.5, y: 0.5}} >
          <View style={{flexDirection:'row', alignItems:'center',width: 100 + '%', height: 100 +'%',justifyContent:'center', paddingHorizontal:20}}>
@@ -464,16 +468,16 @@ let sharePhotoUrl=[]
                     
                    )
               }
-          <View style={{flex:10, backgroundColor:'#fff'}}>
+          <View style={{flex:10, backgroundColor:bgColor}}>
             <ScrollView >
-              <View style={{alignItems:'center', justifyContent:'flex-start', elevation:6,width:WIDTH, flexDirection:'row', borderBottomWidth:1, borderBottomColor:'#f2f2f2', backgroundColor:'#fff'}}>
+              <View style={{alignItems:'center', justifyContent:'flex-start', elevation:6,width:WIDTH, flexDirection:'row', borderBottomWidth:1, borderBottomColor:bgColor, backgroundColor:bgColor}}>
                 <TouchableOpacity activeOpacity={0.9} onPress={()=>{
                   this.props.navigation.goBack()
                   }} style={{alignItems:'center', justifyContent:'center', padding:10,marginLeft:10}}>
-                <FontAwesome style={{}} name="angle-left" size={26} color="#000"/>
+                <FontAwesome style={{}} name="angle-left" size={26} color={textColor}/>
                 </TouchableOpacity>
                 <View style={{alignItems:'center',justifyContent:'center', padding:10}}>
-                  <Text style={{fontSize:20,marginLeft:10, fontFamily:'Quicksand-Medium',textAlign:'center' ,color:'#000',}}>Uncatagorised</Text>
+                  <Text style={{fontSize:20,marginLeft:10, fontFamily:'Quicksand-Medium',textAlign:'center' ,color:textColor,}}>Uncategorized</Text>
                 </View>
                 
               </View>
@@ -489,15 +493,15 @@ let sharePhotoUrl=[]
                
                 this.setState({showPhotos:true, changeState:166})
               }} 
-              style={{flexDirection:'row', justifyContent:'space-between', paddingHorizontal:20, backgroundColor:'#f5f5f5', padding:4, alignItems:'center'}}
+              style={{flexDirection:'row', justifyContent:'space-between', paddingHorizontal:20, backgroundColor:light_cardColor, padding:4, alignItems:'center'}}
               >
-              <Text style={{fontFamily:'Quicksand-Bold', fontSize:16, color:'#000',}}>Photos</Text>
+              <Text style={{fontFamily:'Quicksand-Bold', fontSize:16, color:textColor,}}>Photos</Text>
               <View style={{flexDirection:'row', alignItems:'center'}}>
-                <TouchableOpacity  onPress={()=> this.selectphoto()} style={{borderRadius:20, borderColor:'#0073ff', borderWidth:2, marginRight:10}}>
-                <Text style={{fontFamily:'Quicksand-Bold', fontSize:13, color:'#0073ff',paddingHorizontal:5}}>Import</Text>
+                <TouchableOpacity  onPress={()=> this.selectphoto()} style={{borderRadius:20, borderColor:importColor, borderWidth:2, marginRight:10}}>
+                <Text style={{fontFamily:'Quicksand-Bold', fontSize:13, color:importColor,paddingHorizontal:5}}>Import</Text>
 
                 </TouchableOpacity>
-              <FontAwesome name={this.state.showPhotos? "angle-down" : "angle-right"} size={22} color="#000" />
+              <FontAwesome name={this.state.showPhotos? "angle-down" : "angle-right"} size={22} color={textColor} />
 
               </View>
               </TouchableOpacity>
@@ -511,9 +515,9 @@ let sharePhotoUrl=[]
                   </View>
                 ) :( 
                   <View style={{margin:'auto',alignItems:'center', justifyContent:'center',
-                  marginHorizontal:(WIDTH-((WIDTH/3.1)*3))/2, width:WIDTH }}>
+                  marginHorizontal:(WIDTH-((WIDTH/3.1)*3))/2, width:WIDTH, backgroundColor:bgColor }}>
                  
-                   <View style={{alignItems:'center', justifyContent:'flex-start',margin:'auto', flexDirection:'row', flexWrap:'wrap', width:WIDTH,}}>
+                   <View style={{alignItems:'center', justifyContent:'flex-start',margin:'auto', flexDirection:'row', flexWrap:'wrap', width:WIDTH, backgroundColor:bgColor}}>
                   
                     {imageURLs.map((image, index) =>{
                 
@@ -527,6 +531,7 @@ let sharePhotoUrl=[]
                         }
                         return false;  
                       }
+                     console.log(this.state.selectedPhotoUri) 
                     
 
                       const randomNum = (Math.floor(Math.random() * 1000) + index).toString()
@@ -579,6 +584,7 @@ let sharePhotoUrl=[]
                         activeOpacity={0.9}
                         key={image.source.key + randomNum}
                         onPress={() => {
+                          console.log(image.source)
                           if(this.state.onLongPressOnPhoto){
                             let filtered = this.state.selectedPhotoUri.filter(function(el) { return el.key != image.source.key; });
                             //console.log('filtered==', filtered)
@@ -614,6 +620,7 @@ let sharePhotoUrl=[]
                          
                         onLongPress={()=> 
                         {
+                          console.log(image.source)
                           this.setState({onLongPressOnPhoto:true}, ()=> {
                             this.state.selectedPhotoUri.push(image.source)
                             this.setState({changeState:19870})
@@ -658,14 +665,7 @@ let sharePhotoUrl=[]
                           </LinearGradient>
                                           
                       </TouchableOpacity>
-                      {/* <TouchableOpacity activeOpacity={0.8} 
-                        onPress={()=> this.launchCamera()}
-                        style={{marginTop:10, marginBottom:10,margin:'auto',alignItems:'center', justifyContent:'center',padding:3, alignSelf:'center',paddingHorizontal:20}}>
-                        <LinearGradient colors={['#00aaff', '#0073ff']} style={{borderRadius:11, width:100+'%'}}  start={{x: 0.2, y: 0.2}} end={{x: 0.6, y: 0.6}} >
-                        <Text style={{color:'#fff',paddingHorizontal:20, padding:6,fontSize:14,textAlign:'center', fontFamily:'Quicksand-Medium'}}>Launch Camera</Text>
-                        </LinearGradient>
-                                        
-                    </TouchableOpacity> */}
+                     
                   </View>
                   
                 ):(
@@ -675,7 +675,7 @@ let sharePhotoUrl=[]
 
               </View>
               <View style={{ alignItems:'center', width:WIDTH,}}>
-                <Text  style={{color:'#000',marginHorizontal:10, padding:2,fontSize:12,fontFamily:'Quicksand-Regular'}}>NOTE: NotesMate only stores the location of the files or images, so if you delete the files or images from your device, these will be deleted from here too!</Text>
+                <Text  style={{color:textColor,marginHorizontal:10, padding:2,fontSize:12,fontFamily:'Quicksand-Regular'}}>NOTE: NotesMate only stores the location of the files or images, so if you delete the files or images from your device, these will be deleted from here too!</Text>
               </View>
               {/*************************************************************************************************************************************************************************************************************************************************document*******************************************************************************************************************************************/}
               <View style={{marginTop:20}}>
@@ -684,17 +684,17 @@ let sharePhotoUrl=[]
               } : ()=> {
                 this.setState({showDocument:true, changeState:76})
               }} 
-              style={{flexDirection:'row', justifyContent:'space-between', paddingHorizontal:20, backgroundColor:'#f5f5f5', padding:4}}
+              style={{flexDirection:'row', justifyContent:'space-between', paddingHorizontal:20, backgroundColor:light_cardColor, padding:4}}
               >
-              <Text style={{fontFamily:'Quicksand-Bold', fontSize:16, color:'#000',}}>Documents</Text>
+              <Text style={{fontFamily:'Quicksand-Bold', fontSize:16, color:textColor,}}>Documents</Text>
               <View style={{flexDirection:'row', alignItems:'center'}}>
                 <TouchableOpacity
                 onPress={()=> this.selectpdf()}
-                style={{borderRadius:20, borderColor:'#0073ff', borderWidth:2, marginRight:10}}>
-                <Text style={{fontFamily:'Quicksand-Bold', fontSize:13, color:'#0073ff',paddingHorizontal:5}}>Import</Text>
+                style={{borderRadius:20, borderColor:importColor, borderWidth:2, marginRight:10}}>
+                <Text style={{fontFamily:'Quicksand-Bold', fontSize:13, color:importColor,paddingHorizontal:5}}>Import</Text>
 
                 </TouchableOpacity>
-              <FontAwesome name={this.state.showDocument? "angle-down" : "angle-right"} size={22} color="#000" />
+              <FontAwesome name={this.state.showDocument? "angle-down" : "angle-right"} size={22} color={textColor} />
 
               </View>
 
@@ -709,7 +709,7 @@ let sharePhotoUrl=[]
 
                   </View>
                 ) :( 
-                  <View style={{margin:'auto',alignItems:'center', justifyContent:'center' }}>
+                  <View style={{margin:'auto',alignItems:'center', justifyContent:'center',  }}>
                     <FlatList
                           data={this.props.auth.uncatagorised_documents}
                           renderItem={({item, index}) => this._renderPDF(item, index)}

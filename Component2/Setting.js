@@ -32,7 +32,7 @@ class Setting extends Component {
       
       onShare=(url)=> {
         Share.share({
-            message: `Hey! I am using Notesmate to organize my notes and documents. I guess it will be helpful for you too. So download the app by clicking on the link and make your life productive!` + url,
+            message: `Hey! I am using Notesmate to organize my notes and documents. I guess it will be helpful for you too. So download the app by clicking on the link and make your life productive! \n` + url,
             
             title: 'Join Notesmate!'
           })

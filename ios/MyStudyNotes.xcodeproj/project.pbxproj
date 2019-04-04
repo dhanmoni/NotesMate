@@ -74,6 +74,7 @@
 		3CB0B5B34BDC49C9B7AE3B4D /* libRNShare.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8076956106274143A9AD7AF8 /* libRNShare.a */; };
 		947372AED63149DC85D361CC /* libRCTFBSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E44141FDAE2844FE8F37A141 /* libRCTFBSDK.a */; };
 		CD57D0483AF44AF58D2C2D81 /* libReactNativeAdsFacebook.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6027B569A6A844DBBB80754B /* libReactNativeAdsFacebook.a */; };
+		73964054C87B43B4BEF47AE7 /* libRNFileSelector.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0B2C0EDEB3C46D3BD6A3FA8 /* libRNFileSelector.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -427,6 +428,8 @@
 		E44141FDAE2844FE8F37A141 /* libRCTFBSDK.a */ = {isa = PBXFileReference; name = "libRCTFBSDK.a"; path = "libRCTFBSDK.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		CC2586507548453C97BB2EED /* ReactNativeAdsFacebook.xcodeproj */ = {isa = PBXFileReference; name = "ReactNativeAdsFacebook.xcodeproj"; path = "../node_modules/react-native-fbads/ios/ReactNativeAdsFacebook.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		6027B569A6A844DBBB80754B /* libReactNativeAdsFacebook.a */ = {isa = PBXFileReference; name = "libReactNativeAdsFacebook.a"; path = "libReactNativeAdsFacebook.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		737F4B9F6BB64E3C9A8676BD /* RNFileSelector.xcodeproj */ = {isa = PBXFileReference; name = "RNFileSelector.xcodeproj"; path = "../node_modules/react-native-file-selector/ios/RNFileSelector.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		B0B2C0EDEB3C46D3BD6A3FA8 /* libRNFileSelector.a */ = {isa = PBXFileReference; name = "libRNFileSelector.a"; path = "libRNFileSelector.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -466,6 +469,7 @@
 				3CB0B5B34BDC49C9B7AE3B4D /* libRNShare.a in Frameworks */,
 				947372AED63149DC85D361CC /* libRCTFBSDK.a in Frameworks */,
 				CD57D0483AF44AF58D2C2D81 /* libReactNativeAdsFacebook.a in Frameworks */,
+				73964054C87B43B4BEF47AE7 /* libRNFileSelector.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -667,6 +671,7 @@
 				3458D02E09BC417B98BFC379 /* RNShare.xcodeproj */,
 				F2B61CE20907475D886B36B5 /* RCTFBSDK.xcodeproj */,
 				CC2586507548453C97BB2EED /* ReactNativeAdsFacebook.xcodeproj */,
+				737F4B9F6BB64E3C9A8676BD /* RNFileSelector.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1349,6 +1354,7 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MyStudyNotes.app/MyStudyNotes";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1364,6 +1370,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-share\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
 					"$(SRCROOT)\..\node_modules\react-native-fbads\ios\ReactNativeAdsFacebook",
+					"$(SRCROOT)\..\node_modules\react-native-file-selector\ios",
 				);
 			};
 			name = Debug;
@@ -1385,6 +1392,7 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MyStudyNotes.app/MyStudyNotes";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1400,6 +1408,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-share\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
 					"$(SRCROOT)\..\node_modules\react-native-fbads\ios\ReactNativeAdsFacebook",
+					"$(SRCROOT)\..\node_modules\react-native-file-selector\ios",
 				);
 			};
 			name = Release;
@@ -1434,6 +1443,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-share\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
 					"$(SRCROOT)\..\node_modules\react-native-fbads\ios\ReactNativeAdsFacebook",
+					"$(SRCROOT)\..\node_modules\react-native-file-selector\ios",
 				);
 			};
 			name = Debug;
@@ -1467,6 +1477,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-share\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
 					"$(SRCROOT)\..\node_modules\react-native-fbads\ios\ReactNativeAdsFacebook",
+					"$(SRCROOT)\..\node_modules\react-native-file-selector\ios",
 				);
 			};
 			name = Release;
@@ -1496,6 +1507,7 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1511,6 +1523,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-share\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
 					"$(SRCROOT)\..\node_modules\react-native-fbads\ios\ReactNativeAdsFacebook",
+					"$(SRCROOT)\..\node_modules\react-native-file-selector\ios",
 				);
 			};
 			name = Debug;
@@ -1540,6 +1553,7 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1555,6 +1569,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-share\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
 					"$(SRCROOT)\..\node_modules\react-native-fbads\ios\ReactNativeAdsFacebook",
+					"$(SRCROOT)\..\node_modules\react-native-file-selector\ios",
 				);
 			};
 			name = Release;
@@ -1583,6 +1598,7 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1598,6 +1614,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-share\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
 					"$(SRCROOT)\..\node_modules\react-native-fbads\ios\ReactNativeAdsFacebook",
+					"$(SRCROOT)\..\node_modules\react-native-file-selector\ios",
 				);
 			};
 			name = Debug;
@@ -1626,6 +1643,7 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1641,6 +1659,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-share\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
 					"$(SRCROOT)\..\node_modules\react-native-fbads\ios\ReactNativeAdsFacebook",
+					"$(SRCROOT)\..\node_modules\react-native-file-selector\ios",
 				);
 			};
 			name = Release;

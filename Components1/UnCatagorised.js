@@ -11,6 +11,8 @@ import {
   DocumentPickerUtil,
 } from 'react-native-document-picker';
 import Share, {ShareSheet, Button} from 'react-native-share';
+import RNFileSelector from 'react-native-file-selector';
+
 import Pdf from 'react-native-pdf';
 import ImageView from 'react-native-image-view';
 import RNFetchBlob from 'rn-fetch-blob'
@@ -56,11 +58,24 @@ class UnCatagorised extends Component {
           avoidEmptySpaceAroundImage:false
          // includeBase64:true
         }).then(images => {
-          console.log('--------------------')
-         console.log(images)
-          this.setState({photos: images}, ()=> {
-            console.log('+++++++++++++++++++++++++++++=')
-            console.log(this.state.photos)
+          let SelectedImages=[]
+         images.map(image=> {
+           SelectedImages.push({
+             height: image.height,
+             width: image.width,
+             mime: image.mime,
+             modificationDate: Date.now(),
+             path: image.path,
+
+           })
+         })
+         //console.log(SelectedImages)
+         // console.log('--------------------')
+         //console.log(images)
+          this.setState({photos: SelectedImages}, 
+            ()=> {
+            //console.log('+++++++++++++++++++++++++++++=')
+            //console.log(this.state.photos)
             this.props.addnotestoUncatagorised(this.state.photos)
             let expirationDate = this.props.auth.AddNotestoUncatagorisedAdExpiraion;
             let date = new Date(expirationDate)
@@ -81,62 +96,119 @@ class UnCatagorised extends Component {
           })
         });
       }
-     
-      selectpdf() {
-        //Opening Document Picker
-        
-        DocumentPicker.show(
+
+      selectpdf=()=> {
+        RNFileSelector.Show(
           {
-            filetype: [DocumentPickerUtil.pdf()],
+              title: 'Select PDF',
+              onDone: (path) => {
+                  console.log('file selected: ' + path)
+                  RNFetchBlob.fs.stat(path).then(stats=> {
+                    console.log(stats)
+                    // function getFileExtension(filename) {
+                    //   return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
+                    // }
+                    // getFileExtension(stats.filename)  
+                    let extensionName = stats.filename.split('.').pop()
+                    //console.log(extensionName)
+                   if(extensionName === 'pdf'){
+                    this.setState({
+                        pdf:{
+                          fileUri: 'file://'+ stats.path,
+                          fileType: stats.type,
+                          fileName: stats.filename,
+                          fileSize: stats.size ,
+                          fileKey: stats.path+'DATE:'+ Date.now()
+                        },
+                        },()=> {
+                          this.props.addPdftoUncatagorised(this.state.pdf)
+                        
+                          
+                          let expirationDate = this.props.auth.AddPdftoUncatagorisedAdExpiraion;
+                          let date = new Date(expirationDate)
+                          if(!date || new Date() > date){
+        
+                          myDate = new Date(
+                              new Date().getTime() + (3*60*1000)
+                          )
+                          this.props.setAdTimeForAddPdftoUncatagorised(myDate)
+                        //324550781538284_324676158192413==InterstitialAfterImportPDFinUncatagoried
+                          InterstitialAdManager.showAd('324550781538284_324676158192413')
+                          .then(didClick => {console.log('clicked')})
+                          .catch(error => {console.log('err', error)});
+                        
+                          }
+                          // console.log('state pdf=', this.state.pdf)
+                        })
+                        this.setState({fileUri:'file://'+stats.path})
+                   } else {
+                     ToastAndroid.show('Unsupported file!', ToastAndroid.SHORT)
+                   }
+                  })
+              },
+              onCancel: () => {
+                  console.log('cancelled')
+              },
+              
+          }
+      )
+      }
+     
+      // selectpdf() {
+      //   //Opening Document Picker
+        
+      //   DocumentPicker.show(
+      //     {
+      //       filetype: [DocumentPickerUtil.pdf()],
           
-          },
-          (error, res) => {
-            try {
-              RNFetchBlob.fs.stat(res.uri)
-              .then((stats) => {
-                ToastAndroid.show('Importing...', ToastAndroid.SHORT)
-              this.setState({
-                pdf:{
-                  fileUri: 'file://'+ stats.path,
-                  fileType: stats.type,
-                  fileName: stats.filename,
-                  fileSize: stats.size ,
-                  fileKey: stats.path+'DATE:'+ Date.now()
-                },
-                },()=> {
-                  this.props.addPdftoUncatagorised(this.state.pdf)
+      //     },
+      //     (error, res) => {
+      //       try {
+      //         RNFetchBlob.fs.stat(res.uri)
+      //         .then((stats) => {
+      //           ToastAndroid.show('Importing...', ToastAndroid.SHORT)
+      //         this.setState({
+      //           pdf:{
+      //             fileUri: 'file://'+ stats.path,
+      //             fileType: stats.type,
+      //             fileName: stats.filename,
+      //             fileSize: stats.size ,
+      //             fileKey: stats.path+'DATE:'+ Date.now()
+      //           },
+      //           },()=> {
+      //             this.props.addPdftoUncatagorised(this.state.pdf)
                 
                  
-                  let expirationDate = this.props.auth.AddPdftoUncatagorisedAdExpiraion;
-                  let date = new Date(expirationDate)
-                  if(!date || new Date() > date){
+      //             let expirationDate = this.props.auth.AddPdftoUncatagorisedAdExpiraion;
+      //             let date = new Date(expirationDate)
+      //             if(!date || new Date() > date){
 
-                  myDate = new Date(
-                      new Date().getTime() + (3*60*1000)
-                  )
-                  this.props.setAdTimeForAddPdftoUncatagorised(myDate)
-                //324550781538284_324676158192413==InterstitialAfterImportPDFinUncatagoried
-                  InterstitialAdManager.showAd('324550781538284_324676158192413')
-                  .then(didClick => {console.log('clicked')})
-                  .catch(error => {console.log('err', error)});
+      //             myDate = new Date(
+      //                 new Date().getTime() + (3*60*1000)
+      //             )
+      //             this.props.setAdTimeForAddPdftoUncatagorised(myDate)
+      //           //324550781538284_324676158192413==InterstitialAfterImportPDFinUncatagoried
+      //             InterstitialAdManager.showAd('324550781538284_324676158192413')
+      //             .then(didClick => {console.log('clicked')})
+      //             .catch(error => {console.log('err', error)});
                 
-                  }
-                 // console.log('state pdf=', this.state.pdf)
-                });
-                this.setState({fileUri:'file://'+stats.path})
-              })
-              .catch((err) => {console.log(err)})
+      //             }
+      //            // console.log('state pdf=', this.state.pdf)
+      //           });
+      //           this.setState({fileUri:'file://'+stats.path})
+      //         })
+      //         .catch((err) => {console.log(err)})
               
-            } catch (error) {
-              ToastAndroid.show('Nothing imported!', ToastAndroid.SHORT)
-              console.log(error)
-            }
+      //       } catch (error) {
+      //         ToastAndroid.show('Nothing imported!', ToastAndroid.SHORT)
+      //         console.log(error)
+      //       }
             
             
-          }
+      //     }
           
-        );
-      }
+      //   );
+      // }
 
       deletepdf(item) {
 
@@ -289,14 +361,11 @@ class UnCatagorised extends Component {
                      <TouchableOpacity
                      activeOpacity={0.9}
                       onPress={()=>{
-                        console.log('file uri==')
-                        console.log(item)
-                        this.setState({fileToShare:item.fileUri}, ()=> {
+                       
                           Share.open({
-                            url: this.state.fileToShare,
+                            url: item.fileUri,
                             subject: "Share Link" //  for email
                            });
-                        })
                        
                       }}
                      style={{backgroundColor:cardColor, elevation:5, borderRadius:100, alignItems:'center', justifyContent:'center',marginRight:5, }}>
@@ -349,9 +418,6 @@ class UnCatagorised extends Component {
     const images = [];
     const imageURLs=[];
   
-
-   
-
     this.props.auth.uncatagorised_photos.map(image=> {
       
        
@@ -531,7 +597,7 @@ let sharePhotoUrl=[]
                         }
                         return false;  
                       }
-                     console.log(this.state.selectedPhotoUri) 
+                   //  console.log(this.state.selectedPhotoUri) 
                     
 
                       const randomNum = (Math.floor(Math.random() * 1000) + index).toString()
@@ -584,7 +650,7 @@ let sharePhotoUrl=[]
                         activeOpacity={0.9}
                         key={image.source.key + randomNum}
                         onPress={() => {
-                          console.log(image.source)
+                          //console.log(image.source)
                           if(this.state.onLongPressOnPhoto){
                             let filtered = this.state.selectedPhotoUri.filter(function(el) { return el.key != image.source.key; });
                             //console.log('filtered==', filtered)
@@ -620,7 +686,7 @@ let sharePhotoUrl=[]
                          
                         onLongPress={()=> 
                         {
-                          console.log(image.source)
+                         // console.log(image.source)
                           this.setState({onLongPressOnPhoto:true}, ()=> {
                             this.state.selectedPhotoUri.push(image.source)
                             this.setState({changeState:19870})
@@ -741,6 +807,9 @@ let sharePhotoUrl=[]
                  null
                 )
               }
+               <View style={{ alignItems:'center', width:WIDTH,}}>
+                <Text  style={{color:textColor,marginHorizontal:10, padding:2,fontSize:12,fontFamily:'Quicksand-Regular'}}>NOTE: To properly share a pdf file, your file should not have spaces in between its name!</Text>
+              </View>
               </View>
              <View style={{ marginTop:50, marginBottom:50}}>
              

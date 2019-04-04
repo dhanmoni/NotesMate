@@ -20,18 +20,33 @@ buildscript {
     }
 }
 
+subprojects {
+    afterEvaluate {project ->
+        if (project.hasProperty("android")) {
+            android {
+                compileSdkVersion rootProject.ext.compileSdkVersion
+                buildToolsVersion rootProject.ext.buildToolsVersion
+            }
+        }
+    }
+}
+
+// repositories {
+//     maven {
+//         url  "http://dl.bintray.com/lukaville/maven"
+//     }
+//     maven { url "https://maven.google.com" }
+    
+// }
+
 allprojects {
     repositories {
         mavenLocal()
         google()
         jcenter()
-        maven {
-            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-            url "$rootDir/../node_modules/react-native/android"
-        }
-        maven { url 'https://maven.google.com' }
- 
-      
-      maven { url "https://jitpack.io" }
+        maven {  url "$rootDir/../node_modules/react-native/android" }
+       maven {  url  "http://dl.bintray.com/lukaville/maven"}
+        maven {  url 'https://maven.google.com' }
+        maven {  url "https://jitpack.io" }
     }
 }

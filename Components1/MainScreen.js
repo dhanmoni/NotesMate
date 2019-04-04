@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, ScrollView, TouchableOpacity, Dimensions,TextInput, FlatList, Alert, BackHandler } from 'react-native'
+import { Text, View, ScrollView, TouchableOpacity, Dimensions,TextInput, FlatList, Alert, BackHandler, ToastAndroid } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Icon from 'react-native-vector-icons/FontAwesome5'
@@ -8,8 +8,7 @@ import {connect} from 'react-redux'
 import {addName, addSubject, deleteSubject, getSingleSubject, setAdTimeForDeleteSubject, setLoading, deletepdfFromUncatagorised, deletepdftoUncatagorisedinChapter} from '../redux/action/mainAction'
 import Modal from 'react-native-modal'
 import { BannerView, InterstitialAdManager  } from 'react-native-fbads'
-
-
+import RNFileSelector from 'react-native-file-selector';
 import RNFetchBlob from 'rn-fetch-blob'
 
 const WIDTH = Dimensions.get('window').width;
@@ -81,10 +80,10 @@ class MainScreen extends Component {
     
         
         //console.log('item is ', item)
-        const colors = ['#8e44ad', '#3498db','#fff200', '#6c5ce7', '#0073ff', '#26de81'];
+        const colors = ['#8e44ad', '#f1c40f','#f368e0', '#3949AB', '#0073ff', '#26de81', '#e74c3c'];
         let string = item.subject_name;
 
-       let First_char= string.charAt(0).toUpperCase(); 
+       let First_char= string.trim().charAt(0).toUpperCase(); 
         return (
           <TouchableOpacity  activeOpacity={0.88} onPress={()=> {
            this.props.getSingleSubject(item)
@@ -94,8 +93,8 @@ class MainScreen extends Component {
             }} style={{marginTop:12, marginHorizontal:10,height:HEIGHT/11, backgroundColor:cardColor,paddingHorizontal:10, padding:4, justifyContent:'space-between', flexDirection:'row',alignItems:'center', borderRadius:10, elevation:4}}>
 
                   <View style={{flexDirection:'row', alignItems:'center', justifyContent:'flex-start'}}>
-                  <View style={{backgroundColor: colors[Math.floor(Math.random() * colors.length)], borderRadius:((HEIGHT/11)-(HEIGHT/11)/2)/2, alignItems:'center',overflow:'hidden', justifyContent:'center',height: (HEIGHT/11)-(HEIGHT/11)/2, width: (HEIGHT/11)-(HEIGHT/11)/2, borderWidth:2, borderColor:'#fff' }}>
-                    <Text style={{fontSize:22, color:'#fff',fontFamily:'Quicksand-Bold', }}>{First_char}</Text>
+                  <View style={{backgroundColor: colors[Math.floor(Math.random() * colors.length)], borderRadius:((HEIGHT/10)-(HEIGHT/10)/2)/2, alignItems:'center',overflow:'hidden', justifyContent:'center',height: (HEIGHT/10)-(HEIGHT/10)/2, width: (HEIGHT/10)-(HEIGHT/10)/2, borderWidth:2, borderColor:'#fff' }}>
+                    <Text style={{fontSize:24, color:'#fff',fontFamily:'Quicksand-Bold',textAlign:'center', }}>{First_char}</Text>
                   </View>
                   <Text numberOfLines={2} style={{fontFamily:'Quicksand-Medium', marginRight:10, width:80+'%', fontSize:16, color:textColor,padding:4, marginLeft:10}}>{item.subject_name}</Text>
                   </View>
@@ -113,8 +112,7 @@ class MainScreen extends Component {
         )
       }
      
-      
-
+       
 
   render() {
 
@@ -225,6 +223,7 @@ class MainScreen extends Component {
                         <Text style={{fontFamily:'Quicksand-Bold', fontSize:18, color:textColor,}}>Uncategorized </Text>
                         <FontAwesome name="angle-right" size={23} color={textColor}/>
                     </TouchableOpacity>
+                   
                     
                 </ScrollView>
           </View>
@@ -257,9 +256,14 @@ class MainScreen extends Component {
                   <Text style={{fontFamily:'Quicksand-Medium', fontSize:18, color:'#fff'}}>Cancel</Text>
                 </TouchableOpacity>
               <TouchableOpacity style={{alignItems:"center",padding:5,width:30+'%', borderRadius:10, justifyContent:'center', backgroundColor:'#0073ff'}} onPress={()=> {
-                this.props.addSubject(this.state)
+                if(this.state.subject_name === '' || this.state.subject_name == null){
+                  ToastAndroid.show('Name cannot be empty!', ToastAndroid.SHORT)
+                } else {
+                  this.props.addSubject(this.state)
                 
-                 this.setState({isSubjectModalVisible:false, subject_name:''})}}>
+                  this.setState({isSubjectModalVisible:false, subject_name:''})
+                }
+              }}>
                 <Text style={{fontFamily:'Quicksand-Medium', fontSize:18, color:'#fff'}}>Save</Text>
               </TouchableOpacity>
             </View>

@@ -15,6 +15,7 @@ import {
 } from 'react-native-document-picker';
 import Share, {ShareSheet, Button} from 'react-native-share';
 import Pdf from 'react-native-pdf';
+import RNFileSelector from 'react-native-file-selector';
 import ImageView from 'react-native-image-view';
  
 
@@ -135,49 +136,99 @@ class ChapterScreen extends Component {
         ImagePicker.openPicker({
           multiple: true
         }).then(images => {
-          this.setState({photos_in_chapter: images}, ()=> {
+          let SelectedImages=[]
+          images.map(image=> {
+            SelectedImages.push({
+              height: image.height,
+              width: image.width,
+              mime: image.mime,
+              modificationDate: Date.now(),
+              path: image.path,
+ 
+            })
+          })
+          this.setState({photos_in_chapter: SelectedImages}, ()=> {
             this.props.addnotesinChapter(this.state.photos_in_chapter,this.state.subject_name, this.state.chapter_name)
            
           })
         });
       }
-    
-      selectpdf() {
-        //Opening Document Picker
-        DocumentPicker.show(
+
+
+      selectpdf=()=> {
+        RNFileSelector.Show(
           {
-            filetype: [DocumentPickerUtil.pdf()],
-          },
-          (error, res) => {
-            try {
-              RNFetchBlob.fs.stat(res.uri).then(stats=> {
-                ToastAndroid.show('Importing...', ToastAndroid.SHORT)
-                this.setState({
-                  documents_in_chapter:{
-                    fileUri: 'file://'+ stats.path,
-                    fileType: stats.type,
-                    fileName: stats.filename,
-                    fileSize: stats.size  ,
-                    fileKey: stats.path+'DATE:'+ Date.now()
-                  },
-                  },()=> {
-                    this.props.addpdfinChapter(this.state.documents_in_chapter,this.state.subject_name, this.state.chapter_name)
-                  //  console.log('state pdf=', this.state.documents_in_chapter)
-                  });
-                this.setState({fileUri:res.uri})
-              }).catch(err=> console.log(err))
+              title: 'Select PDF',
+              onDone: (path) => {
+                 // console.log('file selected: ' + path)
+                  RNFetchBlob.fs.stat(path).then(stats=> {
+                    //console.log(stats)
+                    // function getFileExtension(filename) {
+                    //   return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
+                    // }
+                    // getFileExtension(stats.filename)  
+                    let extensionName = stats.filename.split('.').pop()
+                    //console.log(extensionName)
+                   if(extensionName === 'pdf'){
+                    this.setState({
+                      documents_in_chapter:{
+                          fileUri: 'file://'+ stats.path,
+                          fileType: stats.type,
+                          fileName: stats.filename,
+                          fileSize: stats.size ,
+                          fileKey: stats.path+'DATE:'+ Date.now()
+                        },
+                        },()=> {
+                          this.props.addpdfinChapter(this.state.documents_in_chapter,this.state.subject_name, this.state.chapter_name)
+                        
+                        })
+                        this.setState({fileUri:'file://'+stats.path})
+                   } else {
+                     ToastAndroid.show('Unsupported file!', ToastAndroid.SHORT)
+                   }
+                  })
+              },
+              onCancel: () => {
+                  console.log('cancelled')
+              },
+              
+          }
+      )
+      }
+    
+      // selectpdf() {
+      //   //Opening Document Picker
+      //   DocumentPicker.show(
+      //     {
+      //       filetype: [DocumentPickerUtil.pdf()],
+      //     },
+      //     (error, res) => {
+      //       try {
+      //         RNFetchBlob.fs.stat(res.uri).then(stats=> {
+      //           ToastAndroid.show('Importing...', ToastAndroid.SHORT)
+      //           this.setState({
+      //             documents_in_chapter:{
+      //               fileUri: 'file://'+ stats.path,
+      //               fileType: stats.type,
+      //               fileName: stats.filename,
+      //               fileSize: stats.size  ,
+      //               fileKey: stats.path+'DATE:'+ Date.now()
+      //             },
+      //             });
+      //           this.setState({fileUri:res.uri})
+      //         }).catch(err=> console.log(err))
              
        
-            } catch (error) {
-              ToastAndroid.show('Nothing imported!', ToastAndroid.SHORT)
-              console.log(error)
-            }
+      //       } catch (error) {
+      //         ToastAndroid.show('Nothing imported!', ToastAndroid.SHORT)
+      //         console.log(error)
+      //       }
             
             
-          }
+      //     }
           
-        );
-      }
+      //   );
+      // }
 
         
       
@@ -237,11 +288,11 @@ class ChapterScreen extends Component {
 
        
                  return (
-            <TouchableOpacity activeOpacity={0.9}  onPress={()=> {this.setState({showPDF:true, pdfUri:{uri: item.fileUri}}) }}style={{marginTop:10, backgroundColor:cardColor, flexDirection:'row',justifyContent:'space-between', alignItems:'center', borderRadius:8,marginBottom:4, elevation:4,padding:4,  marginHorizontal:5, paddingHorizontal:0}}>     
+            <TouchableOpacity activeOpacity={0.9}  onPress={()=> {this.setState({showPDF:true, pdfUri:{uri: item.fileUri}}) }}style={{marginTop:10, backgroundColor:cardColor, flexDirection:'row',justifyContent:'space-between', alignItems:'center', borderRadius:8,marginBottom:4, elevation:4,padding:4,  marginHorizontal:10, paddingHorizontal:0}}>     
 
                     <View style={{alignItems:'center',padding:0, margin:0,flexDirection:'row',  justifyContent:'flex-start', width:77+'%', overflow:'hidden'}}>
                       <Icon name="file-pdf" style={{padding:7}} size={26} color="#ff0000"/>
-                      <View style={{marginLeft:2,justifyContent:'flex-start', width: 85+'%'}}>
+                      <View style={{marginLeft:2,justifyContent:'flex-start', width: 82+'%'}}>
                       <Text numberOfLines={1} style={{fontFamily:'Quicksand-Medium',padding:7, fontSize:14, color:textColor}}>{item.fileName}</Text>
                       
                       </View> 
@@ -252,14 +303,11 @@ class ChapterScreen extends Component {
                       <TouchableOpacity
                       activeOpacity={0.9}
                       onPress={()=>{
-                        console.log('file uri==')
-                        console.log(item)
-                        this.setState({fileToShare:item.fileUri}, ()=> {
+                        
                           Share.open({
-                            url: this.state.fileToShare,
+                            url: item.fileUri,
                             subject: "Share Link" //  for email
-                            });
-                        })
+                           });
                         
                       }}
                       style={{backgroundColor:cardColor, elevation:5, borderRadius:100, alignItems:'center', justifyContent:'center',marginRight:5}}>
@@ -707,6 +755,9 @@ class ChapterScreen extends Component {
                  null
                 )
               }
+              <View style={{ alignItems:'center', width:WIDTH,}}>
+                <Text  style={{color:textColor,marginHorizontal:10, padding:2,fontSize:12,fontFamily:'Quicksand-Regular'}}>NOTE: To properly share a pdf file, your file should not have spaces in between its name!</Text>
+              </View>
               </View>
              <View style={{marginTop:25}}>
              {/* <View style={{marginBottom:25,}}>

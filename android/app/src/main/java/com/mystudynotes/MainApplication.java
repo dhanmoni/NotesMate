@@ -4,6 +4,7 @@ import android.app.Application;
 
 
 import com.facebook.react.ReactApplication;
+import ui.fileselector.RNFileSelectorPackage;
 import suraj.tiwari.reactnativefbads.FBAdsPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import cl.json.RNSharePackage;
@@ -54,6 +55,7 @@ public class MainApplication extends Application implements  ShareApplication, R
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNFileSelectorPackage(),
             new FBAdsPackage(),
           new FBSDKPackage(mCallbackManager),
             new RNSharePackage(),
@@ -65,6 +67,8 @@ public class MainApplication extends Application implements  ShareApplication, R
             new RNGestureHandlerPackage(),
           new LinearGradientPackage() ,
           new VectorIconsPackage()
+          //new MainReactPackage(), // <---- add comma
+       // new RNFSPackage()
       );
     }
 

@@ -4,7 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import {addName, addChapter, deleteChapter, addnotestoUncatagorisedinChapter, addpdftoUncatagorisedinChapter, deletenotestoUncatagorisedinChapter, deletepdftoUncatagorisedinChapter, editSubject, getSingleChapter, setAdTimeForAddNotestoUncatagorisedInSubject, setAdTimeForDeleteNotestoUncatagorisedInSubject} from '../redux/action/mainAction'
-
+import RNFileSelector from 'react-native-file-selector';
 import {connect} from 'react-redux'
 import Modal from 'react-native-modal'
 import ImagePicker from 'react-native-image-crop-picker';
@@ -133,8 +133,22 @@ class SubScreen extends Component {
         ImagePicker.openPicker({
           multiple: true
         }).then(images => {
-          
-          this.setState({uncatagorised_photos_in_chapter: images}, ()=> {
+
+
+          let SelectedImages=[]
+          images.map(image=> {
+            SelectedImages.push({
+              height: image.height,
+              width: image.width,
+              mime: image.mime,
+              modificationDate: Date.now(),
+              path: image.path,
+ 
+            })
+          })
+
+          this.setState({uncatagorised_photos_in_chapter: SelectedImages}, 
+            ()=> {
             this.props.addnotestoUncatagorisedinChapter(this.state.uncatagorised_photos_in_chapter, this.state.subject_name)
             let expirationDate = this.props.auth.AddNotestoUncatagorisedInSubjectAdExpiraion;
             let date = new Date(expirationDate)
@@ -155,45 +169,88 @@ class SubScreen extends Component {
           })
         });
       }
-      
-      selectpdf() {
-        //Opening Document Picker
-        DocumentPicker.show(
-          {
-            filetype: [DocumentPickerUtil.pdf()],
-          },
-          (error, res) => {
-            ToastAndroid.show('Importing...', ToastAndroid.SHORT)
-            try {
-              RNFetchBlob.fs.stat(res.uri).then(stats=> {
 
-                this.setState({
-                  uncatagorised_documents_in_chapter:{
-                    fileUri: 'file://'+ stats.path,
-                    fileType: stats.type,
-                    fileName: stats.filename,
-                    fileSize: stats.size ,
-                    fileKey: stats.path+'DATE:'+ Date.now() 
-                  },
-                  },()=> {
-                    this.props.addpdftoUncatagorisedinChapter(this.state.uncatagorised_documents_in_chapter, 
-                      this.props.auth.singleSubject.subject_name)
-                  //  console.log('state pdf=', this.state.uncatagorised_documents_in_chapter)
-                });
-                this.setState({fileUri:res.uri})
-              }).catch(err=> console.log(err))
+
+      selectpdf=()=> {
+        RNFileSelector.Show(
+          {
+              title: 'Select PDF',
+              onDone: (path) => {
+                  console.log('file selected: ' + path)
+                  RNFetchBlob.fs.stat(path).then(stats=> {
+                    console.log(stats)
+                    // function getFileExtension(filename) {
+                    //   return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
+                    // }
+                    // getFileExtension(stats.filename)  
+                    let extensionName = stats.filename.split('.').pop()
+                   // console.log(extensionName)
+                   if(extensionName === 'pdf'){
+                    this.setState({
+                      uncatagorised_documents_in_chapter:{
+                          fileUri: 'file://'+ stats.path,
+                          fileType: stats.type,
+                          fileName: stats.filename,
+                          fileSize: stats.size ,
+                          fileKey: stats.path+'DATE:'+ Date.now()
+                        },
+                        },()=> {
+                          this.props.addpdftoUncatagorisedinChapter(this.state.uncatagorised_documents_in_chapter,  this.props.auth.singleSubject.subject_name)
+                        
+                        })
+                        this.setState({fileUri:'file://'+stats.path})
+                   } else {
+                     ToastAndroid.show('Unsupported file!', ToastAndroid.SHORT)
+                   }
+                  })
+              },
+              onCancel: () => {
+                  console.log('cancelled')
+              },
+              
+          }
+      )
+      }
+
+
+      
+      // selectpdf() {
+      //   //Opening Document Picker
+      //   DocumentPicker.show(
+      //     {
+      //       filetype: [DocumentPickerUtil.pdf()],
+      //     },
+      //     (error, res) => {
+      //       ToastAndroid.show('Importing...', ToastAndroid.SHORT)
+      //       try {
+      //         RNFetchBlob.fs.stat(res.uri).then(stats=> {
+
+      //           this.setState({
+      //             uncatagorised_documents_in_chapter:{
+      //               fileUri: 'file://'+ stats.path,
+      //               fileType: stats.type,
+      //               fileName: stats.filename,
+      //               fileSize: stats.size ,
+      //               fileKey: stats.path+'DATE:'+ Date.now() 
+      //             },
+      //             },()=> {
+                   
+      //             //  console.log('state pdf=', this.state.uncatagorised_documents_in_chapter)
+      //           });
+      //           this.setState({fileUri:res.uri})
+      //         }).catch(err=> console.log(err))
              
        
-            } catch (error) {
-              ToastAndroid.show('Nothing imported!', ToastAndroid.SHORT)
-              console.log(error)
-            }
+      //       } catch (error) {
+      //         ToastAndroid.show('Nothing imported!', ToastAndroid.SHORT)
+      //         console.log(error)
+      //       }
             
             
-          }
+      //     }
           
-        );
-      }
+      //   );
+      // }
 
       deleteChapter(item) {
 
@@ -232,10 +289,10 @@ class SubScreen extends Component {
         }
     
        // console.log('item is ', item)
-        const colors = ['#8e44ad', '#fff200',  '#6c5ce7', '#0073ff', '#26de81'];
+       const colors = ['#8e44ad', '#f1c40f','#f368e0', '#3949AB', '#0073ff', '#26de81', '#e74c3c'];
         let string = item.chapter_name;
 
-       let First_char= string.charAt(0).toUpperCase();     
+       let First_char= string.trim().charAt(0).toUpperCase();     
         return (
           <TouchableOpacity
           activeOpacity={0.88}
@@ -245,8 +302,8 @@ class SubScreen extends Component {
             this.props.navigation.navigate('ChapterScreen')
             }} style={{marginTop:12, marginHorizontal:10,height:HEIGHT/11, backgroundColor:cardColor,paddingHorizontal:10, padding:4, justifyContent:'space-between', flexDirection:'row',alignItems:'center', borderRadius:10, elevation:4}}>
                   <View style={{flexDirection:'row', alignItems:'center', justifyContent:'flex-start'}}>
-                  <View style={{backgroundColor: colors[Math.floor(Math.random() * colors.length)], borderRadius:((HEIGHT/11)-(HEIGHT/11)/2)/2, alignItems:'center',overflow:'hidden', justifyContent:'center',height: (HEIGHT/11)-(HEIGHT/11)/2,borderWidth:2, borderColor:'#fff',width: (HEIGHT/11)-(HEIGHT/11)/2 }}>
-                    <Text style={{fontSize:22,textAlign:'center', color:'#fff',fontFamily:'Quicksand-Bold',}}>{First_char}</Text>
+                  <View style={{backgroundColor: colors[Math.floor(Math.random() * colors.length)], borderRadius:((HEIGHT/10)-(HEIGHT/10)/2)/2, alignItems:'center',overflow:'hidden', justifyContent:'center',height: (HEIGHT/10)-(HEIGHT/10)/2, width: (HEIGHT/10)-(HEIGHT/10)/2, borderWidth:2, borderColor:'#fff' }}>
+                    <Text style={{fontSize:24, color:'#fff',fontFamily:'Quicksand-Bold',textAlign:'center', }}>{First_char}</Text>
                   </View>
                   <Text numberOfLines={2}  style={{fontFamily:'Quicksand-Medium',marginRight:10,width:80+'%', fontSize:16, color:textColor,padding:4, marginLeft:10}}>{item.chapter_name}</Text>
                   </View>
@@ -352,13 +409,11 @@ class SubScreen extends Component {
                         <TouchableOpacity
                         activeOpacity={0.9}
                         onPress={()=>{
-                         
-                          this.setState({fileToShare:item.fileUri}, ()=> {
+                          
                             Share.open({
-                              url: this.state.fileToShare,
+                              url: item.fileUri,
                               subject: "Share Link" //  for email
-                              });
-                          })
+                             });
                           
                         }}
                         style={{backgroundColor:cardColor, elevation:5, borderRadius:100, alignItems:'center', justifyContent:'center',marginRight:5}}>
@@ -851,6 +906,9 @@ class SubScreen extends Component {
                  null
                 )
               }
+              <View style={{ alignItems:'center', width:WIDTH,}}>
+                <Text  style={{color:textColor,marginHorizontal:10, padding:2,fontSize:12,fontFamily:'Quicksand-Regular'}}>NOTE: To properly share a pdf file, your file should not have spaces in between its name!</Text>
+              </View>
               </View>
              <View style={{marginBottom:50}}>
 
@@ -903,9 +961,14 @@ class SubScreen extends Component {
                   <Text style={{fontFamily:'Quicksand-Medium', fontSize:18, color:'#fff'}}>Cancel</Text>
                 </TouchableOpacity>
               <TouchableOpacity style={{alignItems:"center",padding:5,width:30+'%', borderRadius:10, justifyContent:'center', backgroundColor:'#0073ff'}} onPress={()=> {
-               this.props.addChapter(this.state)
+                if(this.state.chapter_name === '' || this.state.chapter_name == null){
+                    ToastAndroid.show('Name cannot be empty!', ToastAndroid.SHORT)
+                } else {
+                  this.props.addChapter(this.state)
                 
-                 this.setState({isChapterModalVisible:false, chapter_name:''})}}>
+                 this.setState({isChapterModalVisible:false, chapter_name:''})
+                }
+               }}>
                 <Text style={{fontFamily:'Quicksand-Medium', fontSize:18, color:'#fff'}}>Save</Text>
               </TouchableOpacity>
             </View>

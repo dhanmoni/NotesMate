@@ -969,9 +969,9 @@ acorn-walk@^6.0.1:
   integrity sha512-OtUw6JUTgxA2QoqqmrmQ7F2NYqiBPi/L2jqHyFtllhOUvXYQXf0Z1CYUinIfyT4bTCGmrA7gX9FvHA81uzCoVw==
 
 acorn@^5.5.3:
-  version "5.7.3"
-  resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.7.3.tgz#67aa231bf8812974b85235a96771eb6bd07ea279"
-  integrity sha512-T/zvzYRfbVojPWahDsE5evJdHb3oJoQfFbsrKM7w5Zcs++Tr257tia3BmMP8XYVjp1S9RZXQMh7gao96BlqZOw==
+  version "5.7.4"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.7.4.tgz#3e8d8a9947d0599a1796d10225d7432f4a4acf5e"
+  integrity sha512-1D++VG7BhrtvQpNbBzovKNc1FLGGEE/oGe7b9xJm/RFHMBeUaUGpluV9RLjZa47YFdPcDAenEYuq9pQPcMdLJg==
 
 acorn@^6.0.1:
   version "6.1.1"
@@ -5035,6 +5035,11 @@ pn@^1.1.0:
   resolved "https://registry.yarnpkg.com/pn/-/pn-1.1.0.tgz#e2f4cef0e219f463c179ab37463e4e1ecdccbafb"
   integrity sha512-2qHaIQr2VLRFoxe2nASzsV6ef4yOOH+Fi9FBOVH6cqeSgUnoyySPZkxzLuzd+RYOQTRpROA0ztTMqxROKSb/nA==
 
+pod-installer@0.0.0:
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/pod-installer/-/pod-installer-0.0.0.tgz#363290ec9f2eb7a88bc3e1f229793efdcc7c81c6"
+  integrity sha512-5GFFvaXwESMx0QoopeJqFZzi4xOqI86Lh65WqWAVuZNorUio4/ZBRx7AQBfwnBwOeGA/JjXHP+nHZmSKWGoG1g==
+
 posix-character-classes@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/posix-character-classes/-/posix-character-classes-0.1.1.tgz#01eac0fe3b5af71a2a6c02feabb8c1fef7e00eab"
@@ -5108,7 +5113,7 @@ prompts@^2.0.1:
     kleur "^3.0.2"
     sisteransi "^1.0.0"
 
-prop-types@^15.5.10, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.5.10, prop-types@^15.5.8, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -5255,6 +5260,13 @@ react-native-fbsdk@^0.8.0:
     pump "^1.0.2"
     xcode "^0.9.3"
 
+react-native-file-selector@0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/react-native-file-selector/-/react-native-file-selector-0.0.6.tgz#ced266a44ed50c18f7c96f5e25273836064058e3"
+  integrity sha512-Xb3LOg3cCpjcIFtavPvEkuE7VAp/VMZOUmCNviSPOKbt+lFukRJSbIHNivhThYIkKPCHy/RP8rpkz23vJjE3Qw==
+  dependencies:
+    pod-installer "0.0.0"
+
 react-native-gesture-handler@^1.0.17:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.1.0.tgz#2a7d545ad2e0ca23adce22b2af441ad360ecccee"
@@ -5269,32 +5281,15 @@ react-native-image-crop-picker@^0.23.0:
   resolved "https://registry.yarnpkg.com/react-native-image-crop-picker/-/react-native-image-crop-picker-0.23.0.tgz#27bb1b2d1ce4a33b4edf93945519a1dee63d5a92"
   integrity sha512-BmfP246feY+sElYArAR7/DGRT2kFCTvAdiBKcIH8sA7UbUNy2eGAZsXBZWtt917wm+RuhW98CoAsnKB3iH9IvQ==
 
-react-native-image-picker@^0.28.0:
-  version "0.28.0"
-  resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-0.28.0.tgz#e3f26df170ea932e9c0404624fbced2f59a300e3"
-  integrity sha512-lQfdOyC1mQ/pvfEaUGdoodO1A1clg9kf6YC1WdbWhA6XK+joBd9GQYf8SaCf6/7vM25U4ib+6ux4yvnrS1pOqQ==
-
 react-native-image-view@^2.1.4:
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/react-native-image-view/-/react-native-image-view-2.1.4.tgz#47faa6c42588e7509f530561a53d3b13eaa5e9bc"
   integrity sha512-V9nKJ9voZgKVaB6IzLpl9WJ+g1j/CrrWG+x/XtEjjxYQK5yi1pTUcybkoNRXpxF7K8ZnGqR2Dp4VdEKPt5qJlA==
 
-react-native-interactive-image-gallery@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/react-native-interactive-image-gallery/-/react-native-interactive-image-gallery-0.1.2.tgz#35a35ddddabb9713e7180f3bd932f55287b25c81"
-  integrity sha512-gjQfPePnH/qJ3I5DkoPaEqWSVX15ojK/MG0TCBa58PyGmmcbZcj7aPqo+S3YkWz0vxFR/4yWxzR48TRwYQzj9g==
-
 react-native-linear-gradient@^2.5.3:
   version "2.5.4"
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.5.4.tgz#dce133526f5a5510a639af94544f1ed0c984bd1e"
   integrity sha512-FF1NhlerA4uBiS0gFIHa4FBp8/aftv4vPj14Y47lGNkYjSI94tnI6oYO3EfUxXjEyCUPiOVNKZOB9kScyjc5Ew==
-
-react-native-material-menu@^0.4.2:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/react-native-material-menu/-/react-native-material-menu-0.4.2.tgz#1dc39c1744ef65d5e536badd5e4d6d640b1f43da"
-  integrity sha512-k4I56GKzmXDx1QDosRFGk5U8+z7Iec0MM1GM6R68fukwzEQn1UDBv8PkcwP7Z/2Ex+PfjDnTkYzCqWnCa88ouQ==
-  dependencies:
-    prop-types "^15.6.0"
 
 react-native-modal@^9.0.0:
   version "9.0.0"
@@ -6976,8 +6971,3 @@ yargs@^9.0.0:
     which-module "^2.0.0"
     y18n "^3.2.1"
     yargs-parser "^7.0.0"
-
-yarn@^1.13.0:
-  version "1.13.0"
-  resolved "https://registry.yarnpkg.com/yarn/-/yarn-1.13.0.tgz#affa9c956739548024068532a902cf18c9cb523f"
-  integrity sha512-Unfw2eefv8imt4ZMPhvFVP44WCz38huDxkHs+Yqrx4wBTK75Tr0mh3V4rh+2Nw5iQq0rcM/VafotCZo9qTb5DA==

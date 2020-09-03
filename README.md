@@ -8,9 +8,9 @@ You can add more categories/chapter inside one subject as well. Moreover, you ca
 
 ## Demo
 
-![https://drive.google.com/file/d/1kMX6XyUGnxdHE9gzGu6ruhh0A7mtXaXD/view?usp=sharing](https://drive.google.com/file/d/1kMX6XyUGnxdHE9gzGu6ruhh0A7mtXaXD/view?usp=sharing)
+![Watch demo video](https://drive.google.com/file/d/1kMX6XyUGnxdHE9gzGu6ruhh0A7mtXaXD/view?usp=sharing)
 ---
-<img src="https://res.cloudinary.com/dmn19/image/upload/v1599128124/GIF-200902_192850.gif" width="300" height="450" alt="gif demo">
+<img src="https://res.cloudinary.com/dmn19/image/upload/v1599128124/GIF-200902_192850.gif" width="250" height="450" alt="gif demo">
 
 ## Images
 

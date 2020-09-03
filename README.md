@@ -4,12 +4,13 @@
 
 Do you save important notes on your phone gallery? Then you may have hard time finding those.
 **NotesMate** helps organizing your notes in a convenient way. Add a category/subject and import your notes/images as well as PDF and no more panic in important time.
-You can add more category/chapter inside one subject as well. Moreover you can add uncategorized notes and documents.
+You can add more categories/chapter inside one subject as well. Moreover, you can add uncategorized notes and documents.
 
 ## Demo
 
-![Video](https://drive.google.com/file/d/1kMX6XyUGnxdHE9gzGu6ruhh0A7mtXaXD/view?usp=sharing)
-![](https://res.cloudinary.com/dmn19/image/upload/v1599128124/GIF-200902_192850.gif)
+![Watch demo video](https://drive.google.com/file/d/1kMX6XyUGnxdHE9gzGu6ruhh0A7mtXaXD/view?usp=sharing)
+---
+![](https://res.cloudinary.com/dmn19/image/upload/v1599128124/GIF-200902_192850.gif | width=400)
 
 ## Images
 

@@ -11,7 +11,7 @@
     "react-native": "0.59.1",
     "react-native-document-picker": "^2.3.0",
     "react-native-fbads": "^6.0.2",
-    "react-native-fbsdk": "^0.8.0",
+    "react-native-fbsdk": "^3.0.0",
     "react-native-file-selector": "0.0.6",
     "react-native-gesture-handler": "^1.0.17",
     "react-native-image-crop-picker": "^0.23.0",
